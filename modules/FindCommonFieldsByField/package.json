@@ -9,6 +9,7 @@
   "author": "Bar Snir",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "object-path-get": "^1.0.1"
   }
 }
