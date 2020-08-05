@@ -1,0 +1,20 @@
+{
+  "name": "elasticsearch_data_tools",
+  "version": "1.0.0",
+  "description": "Run from here the modules",
+  "main": "index.js",
+  "scripts": {
+    "FindCommonModules":"node ./modules/FindCommonFieldsByID/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BarSnir/Elasticsearch_Data_Tools.git"
+  },
+  "author": "Bar Snir",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BarSnir/Elasticsearch_Data_Tools/issues"
+  },
+  "homepage": "https://github.com/BarSnir/Elasticsearch_Data_Tools#readme"
+}
