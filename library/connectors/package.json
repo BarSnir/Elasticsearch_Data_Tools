@@ -1,0 +1,13 @@
+{
+  "name": "connectors",
+  "version": "1.0.0",
+  "description": "Connectors to data sources in Elasticsearch-Data-Tools repo",
+  "main": "index.js",
+  "repository": "",
+  "author": "Bar Snir",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.8.0"
+  }
+}
