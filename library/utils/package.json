@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bar Snir",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cli-progress": "^3.8.2",
+    "colors": "^1.4.0"
+  }
 }
