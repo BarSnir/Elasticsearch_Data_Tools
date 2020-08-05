@@ -1,7 +1,7 @@
-require('./server').configEnv()
+const server = require('./server');
+server.configEnv();
 
 function runModule() {
-    console.log(process.env.ELASTICSEARCH_HOST);
+    const ecClient = server.getECConnection();
 }
-
 runModule()
