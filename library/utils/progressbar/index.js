@@ -11,7 +11,7 @@ module.exports = {
     initBar(){
       let color = _colors[this.color];
       return new cliProgress.SingleBar({
-        format: 'CLI Progress |' + color('{bar}') +  `| {percentage}% || {value}/{total} Documents 🍺 ${this.message}`,
+        format: 'CLI Progress |' + color('{bar}') +  `| {percentage}% || {value}/{total} 🍺 ${this.message}`,
         barCompleteChar: '\u2588',
         barIncompleteChar: '\u2591',
         hideCursor: true
