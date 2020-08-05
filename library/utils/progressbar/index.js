@@ -8,7 +8,7 @@ module.exports = {
       this.color = color;
       this.message = message;
     },
-    runProgressBar(){
+    initBar(){
       let color = _colors[this.color];
       return new cliProgress.SingleBar({
         format: 'CLI Progress |' + color('{bar}') +  `| {percentage}% || {value}/{total} Documents 🍺 ${this.message}`,
@@ -21,10 +21,10 @@ module.exports = {
         this.currentProgressBar = this.runProgressBar();
         this.currentProgressBar.start(count, 0);
     },
-    completeProcess(){
+    increaseBar(int=1){
+      this.currentProgressBar.increment(int);
+    },
+    completeBar(){
         this.currentProgressBar.stop(); 
     },
-    incrementProcess(int=1){
-        this.currentProgressBar.increment(int);
-    }
 }
