@@ -1,5 +1,5 @@
 {
-  "name": "findcommonfieldsbyid",
+  "name": "find-common-fields-by-field",
   "version": "1.0.0",
   "description": "Belong to Elasticsearch-Data-Tools",
   "main": "index.js",
