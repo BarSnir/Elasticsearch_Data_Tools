@@ -1,15 +1,10 @@
 const objectPath = require('object-path-get');
-const elasticClient = require('../repositories/elasticsearch')
+const elasticRepo = require('../repositories/elasticsearchRepo');
 
 
 module.exports = {
     async getIndexMapping() {
-        const ecClient = elasticClient.getECConnection();
-        console.log(`Step1: Connected to Elasticsearch.\n`);
-        const response = await ecClient.indices.getMapping({
-            index: process.env.ELASTICSEARCH_INDEX_NAME,
-            include_type_name: process.env.ELASTICSEARCH_TYPE_INCLUDED,
-        });
+        const response = await elasticRepo.getIndexMapping();
         console.log(`Step2: Fetched origin mapping in index named ${process.env.ELASTICSEARCH_INDEX_NAME}. \n`)
         return objectPath(response, this.getMappingPath());
     },

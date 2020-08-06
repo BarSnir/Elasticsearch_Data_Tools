@@ -1,8 +1,8 @@
-const elasticClient = require('../repositories/elasticsearch')
+const elasticClient = require('../repositories/elasticsearchRepo')
 
 module.exports = {
+    ecClient: null,
     find(mappingObj){
-        const ecClient = elasticClient.getECConnection();
         
         console.log(mappingObj);
     }
