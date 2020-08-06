@@ -5,7 +5,8 @@ module.exports = {
     keywordPath: "fields.keyword.type",
     getQuery(mappingObj) {
         const preparedData = this.prepareDataToQuery(mappingObj);
-        
+        console.log(preparedData);
+        return preparedData;
     },
     prepareDataToQuery(mappingObj){
         for(const key in mappingObj){
