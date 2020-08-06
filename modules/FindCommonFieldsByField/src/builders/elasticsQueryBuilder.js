@@ -16,6 +16,7 @@ module.exports = {
             const query = this.getQuery(fieldNames[i]);
             queries.push(query)
         }
+        console.log("Step5: Constructed the quires.Now lets performing multi search.\n");
         return queries;
     },
     getQuery(fieldName) {

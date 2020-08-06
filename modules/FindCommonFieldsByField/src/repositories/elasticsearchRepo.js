@@ -16,4 +16,9 @@ module.exports = {
             include_type_name: process.env.ELASTICSEARCH_TYPE_INCLUDED,
         });
     },
+    preformMsSearch(query){
+        return this.elasticClient.msearch({
+            body: query
+        });
+    }
 }
