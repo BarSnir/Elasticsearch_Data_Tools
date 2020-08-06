@@ -2,23 +2,33 @@ const objectPath = require('object-path-get');
 
 module.exports = {
     indexMapping: null,
-    getParsedMapping(indexMapping) {
-        return this.extractNested(indexMapping).removedFields().sendMapping()
+    getParsedMapping(response) {
+        return this.getMappingObject(response)
+            .extractNested()
+            .removedFields()
+            .getMapping()
     },
-    extractNested(indexMapping){
-        this.indexMapping = objectPath(indexMapping, process.env.EXTRA_NESTED_OBJECT);
+    getMappingObject(response){
+        this.indexMapping = objectPath(response, this.getMappingPath());
+        return this;
+    },
+    extractNested(){
+        this.indexMapping = objectPath(this.indexMapping, process.env.EXTRA_NESTED_OBJECT);
         return this;
     },
     removedFields(){
         if (!process.env.DELETE_FIELDS) return this
+        
         const deleteKeysArr = process.env.DELETE_FIELDS.split(",");
         for (let i = 0; i <= deleteKeysArr.length; i++) {
             delete this.indexMapping[deleteKeysArr[i]];
         }
         return this
     },
-    sendMapping() {
+    getMapping() {
         return this.indexMapping;
-    }
-    
+    },
+    getMappingPath(){
+        return `body.${process.env.ELASTICSEARCH_INDEX_NAME}.mappings.properties`;
+    },
 }

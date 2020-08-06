@@ -1,4 +1,4 @@
-const findCommonFieldsService = require('./findCommonFieldsService');
+const commonFieldsService = require('./commonFieldsService');
 const mappingService = require('./mappingService');
 
 module.exports = {
@@ -6,6 +6,6 @@ module.exports = {
         return mappingService.getIndexMapping();
     },
     findCommonFields(mappingObj){
-        return findCommonFieldsService.find(mappingObj);
+        return commonFieldsService.find(mappingObj);
     }
 }
