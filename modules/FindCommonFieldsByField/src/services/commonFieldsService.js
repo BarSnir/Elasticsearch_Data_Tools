@@ -5,7 +5,7 @@ const transformers = require('../transformers');
 module.exports = {
     find(mappingObj){
         const fieldNames = transformers.getFieldNames(mappingObj);
-        const query = elasticQueryBuilder.getQueries()
+        const query = elasticQueryBuilder.getQueries(fieldNames)
         
     }
 }

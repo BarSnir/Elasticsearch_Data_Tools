@@ -1,0 +1,24 @@
+{
+    "size": 0,
+    "query": {
+      "exists": {
+        "field": "field_value"
+      }
+    },
+    "aggs": {
+      "common_field": {
+        "terms": {
+          "field": "common_field",
+          "size": 7
+        },
+        "aggs": {
+          "values": {
+            "terms": {
+              "field": "field_value",
+              "size": 10
+            }
+          }
+        }
+      }
+    }
+}
