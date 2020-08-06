@@ -4,9 +4,10 @@ const objectPathSet = require('object-path-set');
 
 module.exports = {
     queryTemplate: null,
+    prevKeyName: null,
     objectPathQuery: "query.exists.field",
-    objectPathAggregation: "aggs.common_field.aggs.values.terms.field",
-    objectPathCommonValue: "aggs.common_field.terms.field",
+    objectPathAggregation: "aggs.common_fields.aggs.value_sample.terms.field",
+    objectPathCommonValue: "aggs.common_fields.terms.field",
     getQueries(fieldNames){
         const queries = [];
         this.queryTemplate = commonFieldQueryTemplate;
@@ -16,12 +17,13 @@ module.exports = {
             const query = this.getQuery(fieldNames[i]);
             queries.push(query)
         }
-        console.log("Step5: Constructed the quires.Now lets performing multi search.\n");
+        console.log("Step5: Constructed the quires. Now lets performing multi search.\n");
         return queries;
     },
     getQuery(fieldName) {
         this.fillValues(fieldName)
-            .fillCommonFieldValue();
+            .fillCommonFieldValue()
+            .replaceCommonAggregationName(fieldName);
         return this.queryTemplate;
     },
     fillValues(fieldName){
@@ -32,6 +34,11 @@ module.exports = {
     fillCommonFieldValue(){
         const commonFieldName = process.env.COMMON_FIELD_NAME
         objectPathSet(this.queryTemplate, this.objectPathCommonValue, commonFieldName)
+        return this;
+    },
+    replaceCommonAggregationName(fieldName) {
+
+        console.log(JSON.stringify(this.queryTemplate), "\n");
         return this;
     }
 }

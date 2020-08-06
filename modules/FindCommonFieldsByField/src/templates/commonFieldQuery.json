@@ -1,24 +1,24 @@
 {
-    "size": 0,
-    "query": {
-      "exists": {
-        "field": "field_value"
-      }
-    },
-    "aggs": {
-      "common_field": {
-        "terms": {
-          "field": "common_field",
-          "size": 7
-        },
-        "aggs": {
-          "values": {
-            "terms": {
-              "field": "field_value",
-              "size": 10
-            }
+  "size": 0,
+  "query": {
+    "exists": {
+      "field": "raw_data.data.zoom_time.keyword"
+    }
+  },
+  "aggs": {
+    "common_fields": {
+      "terms": {
+        "field": "raw_data.data.CatID",
+        "size": 10
+      },
+      "aggs": {
+        "value_sample": {
+          "terms": {
+            "field": "raw_data.data.zoom_time.keyword",
+            "size": 10
           }
         }
       }
     }
-}
+  }
+} 
