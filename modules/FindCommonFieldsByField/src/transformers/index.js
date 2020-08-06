@@ -1,5 +1,5 @@
 const parsedMappingTransformer = require('./parsedMappingTransformer');
-const queryTransformer = require('./queryTransformer');
+const fieldNamesTransformer = require('./fieldNamesTransformer');
 
 module.exports = {
     getParsedMapping(indexMapping){
@@ -9,6 +9,6 @@ module.exports = {
     },
     getQuery(mappingObj){
         console.log(`Step4: Preparing data to initialize in query.\n`);
-        return queryTransformer.getQuery(mappingObj);
+        return fieldNamesTransformer.getQuery(mappingObj);
     }
 }

@@ -15,5 +15,5 @@ module.exports = {
             index: process.env.ELASTICSEARCH_INDEX_NAME,
             include_type_name: process.env.ELASTICSEARCH_TYPE_INCLUDED,
         });
-    }
+    },
 }
