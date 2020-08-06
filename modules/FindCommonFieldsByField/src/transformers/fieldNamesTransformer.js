@@ -1,20 +1,21 @@
 const objectPath = require('object-path-get');
 
 module.exports = {
-    fieldsNames: [],
     keywordPath: "fields.keyword.type",
-    getQuery(mappingObj) {
+    extraNestedKey: "EXTRA_NESTED_OBJECT_POINTER",
+    emptyString: "",
+    getFieldNames(mappingObj) {
         const fieldNames = this.prepareDataToQuery(mappingObj);
         return fieldNames;
     },
     prepareDataToQuery(mappingObj){
+        const fieldNames = []
         for(const key in mappingObj){
             const value = mappingObj[key];
             const fieldName = this.getDataType(key, value);
-            this.fieldsNames.push(fieldName);
+            fieldNames.push(fieldName);
         }
-        console.log(this.fieldsNames);
-        return this.fieldsNames;
+        return fieldNames;
     },
     getDataType(key, object){
         if(this.isExtraNestedObjDefined()) 
@@ -24,9 +25,9 @@ module.exports = {
     getType(object){
         if(objectPath(object, this.keywordPath)) 
             return `.${objectPath(object, this.keywordPath)}`;
-        return ""
+        return this.emptyString;
     },
     isExtraNestedObjDefined(){
-        return process.env.hasOwnProperty('EXTRA_NESTED_OBJECT_POINTER');
+        return process.env.hasOwnProperty(this.extraNestedKey);
     },
 }

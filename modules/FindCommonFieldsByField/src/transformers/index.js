@@ -7,8 +7,8 @@ module.exports = {
         console.log(`Step3: Parsing mapping as you asked.\n`)
         return parsedMappingTransformer.getParsedMapping(indexMapping)
     },
-    getQuery(mappingObj){
+    getFieldNames(mappingObj){
         console.log(`Step4: Preparing data to initialize in query.\n`);
-        return fieldNamesTransformer.getQuery(mappingObj);
+        return fieldNamesTransformer.getFieldNames(mappingObj);
     }
 }

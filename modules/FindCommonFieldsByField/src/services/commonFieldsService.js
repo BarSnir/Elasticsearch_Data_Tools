@@ -1,9 +1,11 @@
 const elasticRepo = require('../repositories/elasticsearchRepo');
+const elasticQueryBuilder = require('../builders/elasticsQueryBuilder')
 const transformers = require('../transformers');
 
 module.exports = {
     find(mappingObj){
-        const query = transformers.getQuery(mappingObj);
+        const fieldNames = transformers.getFieldNames(mappingObj);
+        const query = elasticQueryBuilder.getQueries()
         
     }
 }
