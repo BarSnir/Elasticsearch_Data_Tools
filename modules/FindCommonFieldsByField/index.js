@@ -6,6 +6,7 @@ server.configEnv();
 async function runModule() {
     const indexMapping = await services.getIndexMapping();
     const mappingObj = transformers.getParsedMapping(indexMapping);
-    console.log(mappingObj);
+    const commonFields = await services.findCommonFields(mappingObj);
+
 }
 runModule()

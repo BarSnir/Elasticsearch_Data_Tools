@@ -1,9 +1,10 @@
 const objectPath = require('object-path-get');
-const server = require('../../server');
+const elasticClient = require('../repositories/elasticsearch')
+
 
 module.exports = {
     async getIndexMapping() {
-        const ecClient = server.getECConnection();
+        const ecClient = elasticClient.getECConnection();
         console.log(`Step1: Connected to Elasticsearch.\n`);
         const response = await ecClient.indices.getMapping({
             index: process.env.ELASTICSEARCH_INDEX_NAME,
