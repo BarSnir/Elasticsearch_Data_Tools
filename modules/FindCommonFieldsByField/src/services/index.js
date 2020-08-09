@@ -1,11 +1,14 @@
-const commonFieldsService = require('./commonFieldsService');
+const aggregationResultsService = require('./aggregationResultsService');
 const mappingService = require('./mappingService');
 
 module.exports = {
     getIndexMapping(){
         return mappingService.getIndexMapping();
     },
-    findCommonFields(mappingObj){
-        return commonFieldsService.find(mappingObj);
+    getAggregationResults(mappingObj){
+        return aggregationResultsService.getAggregationResults(mappingObj);
+    },
+    analyzeResults(aggregationResults){
+        
     }
 }
