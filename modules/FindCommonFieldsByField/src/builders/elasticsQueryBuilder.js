@@ -15,16 +15,15 @@ module.exports = {
             const msDirectionObj = { index: process.env.ELASTICSEARCH_INDEX_NAME}
             queries.push(msDirectionObj);
             const query = this.getQuery(fieldNames[i]);
-            queries.push(query)
+            queries.push(JSON.parse(JSON.stringify(query)))
         }
         console.log("Step5: Constructed the quires. Now lets performing multi search.\n");
         return queries;
     },
     getQuery(fieldName) {
-        this.fillValues(fieldName)
-            .fillCommonFieldValue()
-            .replaceCommonAggregationName(fieldName);
-        return this.queryTemplate;
+        return this.fillValues(fieldName)
+                    .fillCommonFieldValue()
+                    .replaceCommonAggregationName(fieldName);
     },
     fillValues(fieldName){
         objectPathSet(this.queryTemplate, this.objectPathQuery, fieldName)
@@ -40,13 +39,13 @@ module.exports = {
         const commonAggObj = JSON.parse(
             JSON.stringify(this.queryTemplate.aggs.common_fields)
         );
+
         if(this.prevKeyName)
             delete this.queryTemplate.aggs[this.prevKeyName]
-
+        
         this.queryTemplate.aggs[fieldName] = commonAggObj;
         this.prevKeyName = fieldName;
         delete this.queryTemplate.aggs.common_fields
-
-        return this;
+        return this.queryTemplate;
     }
 }
