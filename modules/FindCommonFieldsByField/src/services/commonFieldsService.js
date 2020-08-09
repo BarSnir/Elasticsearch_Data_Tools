@@ -8,6 +8,7 @@ module.exports = {
         const fieldNames = transformers.getFieldNames(mappingObj);
         const query = elasticQueryBuilder.getQueries(fieldNames);
         const queryChunks = transformers.getQueryChunks(query);
+        
         //const response = await elasticRepo.preformMsSearch(query);
         //fs.appendFileSync('./response.json', JSON.stringify(response.body, null ,2));
     }

@@ -37,8 +37,16 @@ module.exports = {
         return this;
     },
     replaceCommonAggregationName(fieldName) {
+        const commonAggObj = JSON.parse(
+            JSON.stringify(this.queryTemplate.aggs.common_fields)
+        );
+        if(this.prevKeyName)
+            delete this.queryTemplate.aggs[this.prevKeyName]
 
-        console.log(JSON.stringify(this.queryTemplate), "\n");
+        this.queryTemplate.aggs[fieldName] = commonAggObj;
+        this.prevKeyName = fieldName;
+        delete this.queryTemplate.aggs.common_fields
+
         return this;
     }
 }
