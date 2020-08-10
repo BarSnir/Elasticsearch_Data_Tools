@@ -1,6 +1,7 @@
 const commonFieldQueryTemplate = require('../templates/commonFieldQuery.json');
 const logger = require('../.../../../../../library/utils/logger');
 const objectPathSet = require('object-path-set');
+const jsonUtils = require('../../../../library/utils/json/jsonUtil')
 
 module.exports = {
     queryTemplate: null,
@@ -18,7 +19,7 @@ module.exports = {
             const msDirectionObj = { index: process.env.ELASTICSEARCH_INDEX_NAME}
             queries.push(msDirectionObj);
             const query = this.getQuery(fieldNames[i]);
-            queries.push(JSON.parse(JSON.stringify(query)))
+            queries.push(jsonUtils.getFreshCopy(query))
         }
         logger.log(this.logMessages.a)
         return queries;
@@ -39,10 +40,9 @@ module.exports = {
         return this;
     },
     replaceCommonAggregationName(fieldName) {
-        const commonAggObj = JSON.parse(
-            JSON.stringify(this.queryTemplate.aggs.common_fields)
-        );
-
+        const commonAggObj = jsonUtils.getFreshCopy(
+            this.queryTemplate.aggs.common_fields
+        )
         if(this.prevKeyName)
             delete this.queryTemplate.aggs[this.prevKeyName]
         

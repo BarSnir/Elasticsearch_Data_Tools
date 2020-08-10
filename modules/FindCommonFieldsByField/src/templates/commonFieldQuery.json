@@ -2,19 +2,19 @@
   "size": 0,
   "query": {
     "exists": {
-      "field": "raw_data.data.zoom_time.keyword"
+      "field": "value"
     }
   },
   "aggs": {
     "common_fields": {
       "terms": {
-        "field": "raw_data.data.CatID",
+        "field": "common_filed",
         "size": 10
       },
       "aggs": {
         "value_sample": {
           "terms": {
-            "field": "raw_data.data.zoom_time.keyword",
+            "field": "value",
             "size": 10
           }
         }
