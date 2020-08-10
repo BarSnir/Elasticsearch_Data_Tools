@@ -1,5 +1,5 @@
 const commonFieldQueryTemplate = require('../templates/commonFieldQuery.json');
-const objectPathGet = require('object-path-get')
+const logger = require('../.../../../../../library/utils/logger');
 const objectPathSet = require('object-path-set');
 
 module.exports = {
@@ -8,6 +8,9 @@ module.exports = {
     objectPathQuery: "query.exists.field",
     objectPathAggregation: "aggs.common_fields.aggs.value_sample.terms.field",
     objectPathCommonValue: "aggs.common_fields.terms.field",
+    logMessages:{
+        a:`Step5: Constructed the quires. Now lets performing multi search.\n`
+    },
     getQueries(fieldNames){
         const queries = [];
         this.queryTemplate = commonFieldQueryTemplate;
@@ -17,7 +20,7 @@ module.exports = {
             const query = this.getQuery(fieldNames[i]);
             queries.push(JSON.parse(JSON.stringify(query)))
         }
-        console.log("Step5: Constructed the quires. Now lets performing multi search.\n");
+        logger.log(this.logMessages.a)
         return queries;
     },
     getQuery(fieldName) {
