@@ -10,15 +10,16 @@ module.exports = {
             'commonFieldValues', 
             'isCommonField',    
         ],
-        title:"Common_Fields",
+        title: null,
     },
     barColor:"cyan",
     barMessage: "Uploading data to google sheet.",
-    googleSheetQuotaInterval: 1000,
+    googleSheetQuotaInterval: 2500,
     async writeToSheet(analyzedResults){
         try {
             await this.authSheet()
             this.startBar(analyzedResults.length);
+            this.updateSheetTitle()
             const sheet = await googlesheet.addSheet(this.sheetOptions);
             this.writeByQuota(analyzedResults, sheet)
         } catch(e) {
@@ -50,5 +51,8 @@ module.exports = {
     },
     authSheet(){
         googlesheet.sheetInit().sheetAuth(creds);
+    },
+    updateSheetTitle(){
+        this.sheetOptions.title = process.env.GOOGLE_SHEET_TAB_NAME
     }
 }
