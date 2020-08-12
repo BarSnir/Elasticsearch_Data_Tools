@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bar Snir",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "object-path-get": "^1.0.1",
+    "object-path-set": "^1.0.1"
+  }
 }
