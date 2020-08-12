@@ -1,4 +1,5 @@
 const GS = require('google-spreadsheet');
+const creds = require('./credentials.json');
 
 module.exports = {
     docClient: null,
@@ -8,7 +9,7 @@ module.exports = {
         this.docClient = new GS.GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
         return this;
     },
-    sheetAuth(creds){
+    sheetAuth(){
         this.docClient.useServiceAccountAuth(creds);
     },
     async loadInfo(){

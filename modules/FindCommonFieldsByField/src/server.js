@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 const path = require('path');
-const elasticRepo = require('./src/repositories/elasticsearchRepo');
+const elasticRepo = require('./repositories/elasticsearchRepo');
 
 module.exports = {
     env: "development",
