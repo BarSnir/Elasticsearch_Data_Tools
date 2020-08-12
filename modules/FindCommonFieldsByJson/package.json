@@ -1,0 +1,11 @@
+{
+  "name": "findcommonfieldsbyjson",
+  "version": "1.0.0",
+  "description": "for elasticsearch_data_tools_repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bar Snir",
+  "license": "MIT"
+}

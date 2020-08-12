@@ -4,7 +4,8 @@
   "description": "Run from here the modules",
   "main": "index.js",
   "scripts": {
-    "FindCommonFieldsModule": "node ./modules/FindCommonFieldsByField/index.js",
+    "commonFieldsAggsModule": "node ./modules/FindCommonFieldsByField/index.js",
+    "commonFieldsJsonModule": "node ./modules/FindCommonFieldsByJson/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
