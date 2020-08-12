@@ -5,7 +5,7 @@ const elasticRepo = require('./repositories/elasticsearchRepo');
 module.exports = {
     env: "development",
     configEnv(){
-        dotenv.config({path:path.resolve(__dirname, '.env')});
+        dotenv.config({path:path.resolve(__dirname, '../.env')});
     },
     configRepo(){
         elasticRepo.initializeECConnection();
