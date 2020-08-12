@@ -27,8 +27,8 @@ coverage
 *.lcov
 
 
-skeletons/feed_abstract_skeleton.json
-skeletons/search_bar_skeleton.json
+feed_abstract_skeleton.json
+search_bar_skeleton.json
 
 # nyc test coverage
 .nyc_output
