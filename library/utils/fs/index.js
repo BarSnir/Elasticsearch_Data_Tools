@@ -6,5 +6,6 @@ module.exports = {
     },
     writeJson(fileName, payload){
         fs.appendFileSync(`./${fileName}.json`, JSON.stringify(payload, null ,2));
+        console.log(`File wrote to ${fileName}.json`);
     }
 }

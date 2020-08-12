@@ -29,6 +29,7 @@ coverage
 
 feed_abstract_skeleton.json
 search_bar_skeleton.json
+mock.json
 skeletons/
 
 # nyc test coverage
