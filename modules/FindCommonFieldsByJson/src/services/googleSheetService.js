@@ -6,19 +6,18 @@ module.exports = {
     sheetOptions:{
         headerValues:[
             'field_name',
-            'commonFieldValues', 
             'isCommonField',    
         ],
         title: null,
     },
-    barColor:"cyan",
-    barMessage: "Uploading data to google sheet.",
+    barColor:"green",
+    barMessage: " Uploading data to google sheet.",
     googleSheetQuotaInterval: 2500,
     async writeToSheet(analyzedResults){
         try {
+            this.updateSheetTitle();
             await this.authSheet()
             this.startBar(analyzedResults.length);
-            this.updateSheetTitle()
             const sheet = await googlesheet.addSheet(this.sheetOptions);
             this.writeByQuota(analyzedResults, sheet)
         } catch(e) {
