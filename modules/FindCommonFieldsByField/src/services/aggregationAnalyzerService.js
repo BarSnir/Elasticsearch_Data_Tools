@@ -41,11 +41,9 @@ module.exports = {
         return keys;
     },
     checkCommonField(str) {
-        const commonArr = process.env.COMMON_ARR.split(",");
-        let isCommonField = true;
-        let current = str.split(",");
-        if ((current.length != commonArr.length)) return false;
-        return isCommonField;
+        const commonArr = process.env.COMMON_ARR.split(",").sort((a, b) => a - b);
+        const current = str.split(",").sort((a, b) => a - b);
+        return JSON.stringify(commonArr) == JSON.stringify(current)
     },
     splitNested(str){
         const nestedStr = process.env.EXTRA_NESTED_OBJECT_POINTER;
