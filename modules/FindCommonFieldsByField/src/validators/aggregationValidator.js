@@ -1,9 +1,9 @@
 module.exports = {
     validationObj: {},
-    validate(aggregationObj){
+    runValidate(aggregationObj){
         this.setValidationObj();
-        this.validateBuckets(aggregationObj);
-        return this.getValidation();
+        this.prepareBucketsValidation(aggregationObj);
+        return this.validate();
     },
     setValidationObj(){
         const keys = process.env.COMMON_ARR.split(",");
@@ -11,17 +11,24 @@ module.exports = {
             this.validationObj[key] = false;
         });
     },
-    validateBuckets(aggregationObj) {
-        const keys = process.env.COMMON_ARR.split(",");
-        const firstKey = Object.keys(aggregationObj)[0];
-        const firstObject = aggregationObj[firstKey];
-        const firstBuckets = firstObject.buckets;
+    prepareBucketsValidation(aggregationObj) {
+        const fieldName = Object.keys(aggregationObj)[0];
+        const extractedAggregation = aggregationObj[fieldName];
+        const firstBuckets = extractedAggregation.buckets;
+        const keysSubBuckets = this.getKeySubBuckets(firstBuckets);
+        this.setValidationValues(keysSubBuckets)
+    },
+    getKeySubBuckets(firstBuckets) {
         const keysSubBuckets = {};
         firstBuckets.forEach((item)=>{
             const key = item.key;
             const subBuckets = item.value_sample.buckets;
             keysSubBuckets[parseInt(key)] = subBuckets;
         });
+        return keysSubBuckets
+    },
+    setValidationValues(keysSubBuckets) {
+        const keys = process.env.COMMON_ARR.split(",");
         for ( i=0; i < keys.length; i++){
             if (!keys[i]) break;
             const chosenKey = keys[i];
@@ -34,7 +41,7 @@ module.exports = {
             });
         }
     },
-    getValidation(){
+    validate(){
         for(let key in this.validationObj){
             if(!this.validationObj[key]) return false;
         }

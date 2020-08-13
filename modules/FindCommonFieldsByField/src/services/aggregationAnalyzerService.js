@@ -1,4 +1,5 @@
 const logger = require('../../../../library/utils/logger');
+const stringsUtil = require('../../../../library/utils/strings')
 const aggsValidator = require('../validators/aggregationValidator');
 
 module.exports = {
@@ -9,11 +10,11 @@ module.exports = {
     analyze(aggregationResults) {
         let responses = [];
         logger.log(this.logMessage.a)
-        aggregationResults.forEach((obj)=>{
+        aggregationResults.forEach((obj) => {
             responses.push(...obj.responses);
         });
-        responses = responses.map((obj)=> obj.aggregations);
-        responses = responses.filter((obj) => aggsValidator.validate(obj));
+        responses = responses.map(obj => obj.aggregations);
+        responses = responses.filter(obj => aggsValidator.runValidate(obj));
         responses.forEach((obj)=> {
             this.sheetData.push(this.getRowObj(obj));
         });
@@ -35,9 +36,10 @@ module.exports = {
     },
     getCommonFieldValues(obj) {
         const buckets = obj.buckets;
-        let keys = "";
+        let keys = stringsUtil.emptyString;
         buckets.forEach((bucket,index)=> {
-            let str = index+1 === buckets.length ? "" : ",";
+            const condition = index+1 === buckets.length
+            let str = stringsUtil.isEndOfArry(condition)
             keys += bucket.key+str
         });
         return keys;
@@ -45,6 +47,9 @@ module.exports = {
     splitNested(str){
         const nestedStr = process.env.EXTRA_NESTED_OBJECT_POINTER;
         if(nestedStr) 
-            return str.replace(nestedStr+".", "");
+            return str.replace(
+                nestedStr+stringsUtil.dot, 
+                stringsUtil.emptyString
+            );
     }
 }
