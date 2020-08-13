@@ -12,7 +12,7 @@ module.exports = {
     initBar(){
       let color = _colors[this.color];
       this.currentProgressBar =  new cliProgress.SingleBar({
-        format: 'CLI Progress |' + color('{bar}') +  `| {percentage}% || {value}/{total} 🍺 ${this.message}`,
+        format: `👷  |` + color('{bar}') +  `| {percentage}% || {value}/{total} | ${this.message} 🍺`,
         barCompleteChar: '\u2588',
         barIncompleteChar: '\u2591',
         hideCursor: true

@@ -8,7 +8,12 @@ module.exports = {
     logMessages:{
         a: `Step7: Getting aggregation results.\n`
     },
+    barColor: null,
+    barMessage: null,
+    defaultBarMSG: "Progress running.",
+    defaultBarColor: "cyan",
     async getAggregationResults(mappingObj){
+        this.updateProgressBarOptions()
         const fieldNames = transformers.getFieldNames(mappingObj);
         const query = elasticQueryBuilder.getQueries(fieldNames);
         const queryChunks = transformers.getQueryChunks(query);
@@ -33,13 +38,14 @@ module.exports = {
         return responses;
     },
     runProgressBar(queryChunks){
-        progressBar.construct(
-            "cyan",
-            " Query chunks No."
-        );
+        progressBar.construct(this.barColor, this.barMessage);
         progressBar.start(queryChunks.length)
     },
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    updateProgressBarOptions(){
+        this.barColor = process.env.ELASTICSEARCH_PROGRESS_BAR_COLOR || this.defaultBarColor;
+        this.barMessage = process.env.ELASTICSEARCH_PROGRESS_BAR_MSG || this.defaultBarMSG
     }
 }
