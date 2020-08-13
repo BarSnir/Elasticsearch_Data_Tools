@@ -1,4 +1,5 @@
-const logger = require('../../../../library/utils/logger')
+const logger = require('../../../../library/utils/logger');
+const aggsValidator = require('../validators/aggregationValidator');
 
 module.exports = {
     sheetData: [],
@@ -11,7 +12,8 @@ module.exports = {
         aggregationResults.forEach((obj)=>{
             responses.push(...obj.responses);
         });
-        responses = responses.map((obj)=> obj.aggregations)
+        responses = responses.map((obj)=> obj.aggregations);
+        responses = responses.filter((obj) => aggsValidator.validate(obj));
         responses.forEach((obj)=> {
             this.sheetData.push(this.getRowObj(obj));
         });
@@ -20,7 +22,7 @@ module.exports = {
     getRowObj(obj){
         let field_name = this.getFieldName(obj);
         let commonFieldValues = this.getCommonFieldValues(obj[field_name]);
-        let isCommonField = this.checkCommonField(commonFieldValues);
+        let isCommonField = true;
         field_name = this.splitNested(field_name)
         return {
             field_name,
@@ -39,11 +41,6 @@ module.exports = {
             keys += bucket.key+str
         });
         return keys;
-    },
-    checkCommonField(str) {
-        const commonArr = process.env.COMMON_ARR.split(",").sort((a, b) => a - b);
-        const current = str.split(",").sort((a, b) => a - b);
-        return JSON.stringify(commonArr) == JSON.stringify(current)
     },
     splitNested(str){
         const nestedStr = process.env.EXTRA_NESTED_OBJECT_POINTER;

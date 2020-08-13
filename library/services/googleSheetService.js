@@ -9,7 +9,7 @@ module.exports = {
     },
     barColor: null,
     barMessage: null,
-    googleSheetQuotaInterval: 2500,
+    googleSheetQuotaInterval: 2000,
     defaultBarMSG: "Progress running.",
     defaultBarColor: "cyan",
     async writeToSheet(analyzedResults){
