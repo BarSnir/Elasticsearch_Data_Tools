@@ -9,6 +9,7 @@
   "private": false,
   "dependencies": {
     "@elastic/elasticsearch": "^7.8.0",
-    "google-spreadsheet": "^3.0.11"
+    "google-spreadsheet": "^3.0.11",
+    "logzio-nodejs": "^2.0.2"
   }
 }
