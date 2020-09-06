@@ -11,13 +11,18 @@ module.exports = {
         a:`Connection establish by Elastic cloud.\n`,
         b:`Logzio connector established`
     },
+    configCWD(){
+        process.chdir(__dirname);
+        return this;
+    },
     configEnv(){
         dotenv.config({path:path.resolve(__dirname, this.env_path)});
+        return this;
     },
     configRepo(){
         elasticRepo.initializeECConnection();
         logger.log(this.logMessages.a);
         logzioClient.initLogzioLogger();
-        logger.log(this.logMessages.b)
+        logger.log(this.logMessages.b);
     }
 }

@@ -13,5 +13,11 @@ module.exports = {
             password: process.env.ELASTIC_CLOUD_PASSWORD
         });
         logger.log(this.logMessages.a)
+    },
+    executeQuery(query) {
+        return this.elasticClient.search({
+            index: process.env.ELASTICSEARCH_INDEX_NAME,
+            body: query
+        });
     }
 }
