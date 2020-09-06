@@ -9,13 +9,13 @@ module.exports = {
         return jsonsFiles.map(item => fsUtil.getJsonSync(item));
     },
     executeQueries(queries){
-        const promises = queries.map((query)=>{
-            return elasticRepo.executeQuery(query);
+        const promises = queries.map((queryObj)=>{
+            return elasticRepo.executeQuery(queryObj.query);
         });
         return Promise.all(promises)
     },
-    getResults(hits){
-        return transformers.transformResults(hits);
+    getResults(queries, hits){
+        return transformers.transformResults(queries, hits);
     },
     transmitResults(results){},
     getJsonsDirPath(){

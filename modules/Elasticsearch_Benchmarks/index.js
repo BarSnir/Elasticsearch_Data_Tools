@@ -6,7 +6,7 @@ server.configCWD().configEnv().configRepo();
 async function runModule() {
     const queries = services.getProfilerQueries();
     const hits = await services.executeQueries(queries);
-    const results = services.getResults(hits);
+    const results = services.getResults(queries, hits);
     services.transmitResults(results)
 }
 runModule()
