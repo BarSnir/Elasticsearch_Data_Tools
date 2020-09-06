@@ -1,5 +1,6 @@
 const fsUtil = require('../../../../library/utils/fs');
 const elasticRepo = require('../repositories/elasticsearchRepo');
+const transformers = require('../transformers')
 
 module.exports = {
     getProfilerQueries(){
@@ -13,7 +14,9 @@ module.exports = {
         });
         return Promise.all(promises)
     },
-    getResults(hits){},
+    getResults(hits){
+        return transformers.transformResults(hits);
+    },
     transmitResults(results){},
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;
