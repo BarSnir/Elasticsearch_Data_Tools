@@ -13,41 +13,55 @@ module.exports = {
         });
     },
     transform(query, hit) {
-        return {
-            name: query.name,
-            project: query.project,
-            took: objectGet(hit,'body.took'),
-            type: query.type,
-            index: query.index,
-            ...this.getProfiles(hit)
-        }
-    },
-    getProfiles(hit){
         const mainQueryStats = this.fetchProfile(hit);
-        let results = {};
-        results = this.setQueryResults('main_query', results, mainQueryStats)
-        return results
+        let results = [];
+        const options = {
+            name: 'main_query',
+            results,
+            mainQueryStats,
+            took: hit.body.took,
+            query,
+            root: true
+        }
+        results = this.setQueryResults(options);
+        console.log(results);
+        return results;
     },
     fetchQueryType(hit){
         const profileSearchQuery = this.fetchProfile(hit)
         return objectGet(profileSearchQuery[0], 'type');
     },
-    setQueryResults(name, results, query) {
-        results[`${name}_stats_time`] = this.nanoToMillie(query.time_in_nanos);
-        results[`${name}_type`] = query.type;
-        results[`${name}_description`] = query.description;
-        results[`${name}_build_scorer_time`]= this.nanoToMillie(query.breakdown.build_scorer);
-        results[`${name}_weight_time`] = this.nanoToMillie(query.breakdown.create_weight);
-        results[`${name}_docs_collect_time`] = this.nanoToMillie(query.breakdown.next_doc);
-        results[`${name}_score_collect_time`] = this.nanoToMillie(query.breakdown.score);
-
-        if (query.hasOwnProperty('children')) {
+    setQueryResults(options) {
+        options.results.push({
+            query_name: options.query.name,
+            project: options.query.project,
+            type: options.query.type,
+            target_index: options.query.index,
+            root_query: options.root,
+            took: options.took,
+            [`${options.name}_stats_time`]: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
+            [`${options.name}_type`]: options.mainQueryStats.type,
+            [`${options.name}_description`]: options.mainQueryStats.description,
+            [`${options.name}_build_scorer_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.build_scorer),
+            [`${options.name}_weight_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.create_weight),
+            [`${options.name}_docs_collect_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.next_doc),
+            [`${options.name}_score_collect_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.score)
+        });
+        if (options.mainQueryStats.hasOwnProperty('children')) {
             this.nextChar()
-            query.children.forEach((query, index)=> {
-                this.setQueryResults(`nested_query_${this.nested_token+(index+1)}`, results, query)
+            options.mainQueryStats.children.forEach((query, index)=> {
+                const nestedOptions = {
+                    name: `nested_query_${this.nested_token+(index+1)}`,
+                    results: options.results,
+                    mainQueryStats: query,
+                    took: options.took,
+                    query: options.query,
+                    root: false
+                };
+                this.setQueryResults(nestedOptions)
             });
         }
-        return results;
+        return options.results;
     },
     fetchProfile(hit) {
         const profile = objectGet(hit, 'body.profile.shards');
