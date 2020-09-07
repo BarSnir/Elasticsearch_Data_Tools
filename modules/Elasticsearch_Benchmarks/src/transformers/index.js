@@ -8,9 +8,10 @@ module.exports = {
     },
     transformResults(queries, hits){
         logger.log(this.logMessages.a);
-        return hits.map((hit, index)=>{
+        let results = hits.map((hit, index)=>{
             return this.transform(queries[index], hit)
         });
+        return [].concat.apply([], results);
     },
     transform(query, hit) {
         const mainQueryStats = this.fetchProfile(hit);
@@ -24,7 +25,6 @@ module.exports = {
             root: true
         }
         results = this.setQueryResults(options);
-        console.log(results);
         return results;
     },
     fetchQueryType(hit){
