@@ -9,7 +9,7 @@ module.exports = {
     env_path: '../.env',
     logMessages:{
         a:`Connection establish by Elastic cloud.\n`,
-        b:`Logzio connector established`
+        b:`Logzio connector established\n`
     },
     configCWD(){
         process.chdir(__dirname);

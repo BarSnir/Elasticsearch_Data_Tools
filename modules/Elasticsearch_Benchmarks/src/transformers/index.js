@@ -1,62 +1,64 @@
+const logger = require('../../../../library/utils/logger')
 const objectGet = require('object-path-get');
 
 module.exports = {
+    nested_token: null,
+    logMessages:{
+        a: "Preparing data...\n"
+    },
     transformResults(queries, hits){
-        const results = hits.map((hit, index)=>{
+        logger.log(this.logMessages.a);
+        return hits.map((hit, index)=>{
             return this.transform(queries[index], hit)
         });
-        console.log(results);
     },
     transform(query, hit) {
         return {
             name: query.name,
+            project: query.project,
             took: objectGet(hit,'body.took'),
-            ...this.getChildrenType(hit)
+            ...this.getProfiles(hit)
         }
+    },
+    getProfiles(hit){
+        const mainQueryStats = this.fetchProfile(hit);
+        let results = {};
+        results = this.setQueryResults('main_query', results, mainQueryStats)
+        return results
     },
     fetchQueryType(hit){
         const profileSearchQuery = this.fetchProfile(hit)
         return objectGet(profileSearchQuery[0], 'type');
     },
-    getChildrenType(hit){
-        const mainQueryStats = this.fetchProfile(hit);
-        const childrenQueries = objectGet(mainQueryStats, 'children');
-        let results = {};
-        results = this.setMainQueryResults(mainQueryStats)
-        childrenQueries.map((child, index)=>{
-            results = this.setChildrenResults(child, results, index)
-        });
-        return results
-    },
-    setMainQueryResults(mainQueryStats){
-        return {
-            main_query_stats_time: this.nanoToMillie(mainQueryStats.time_in_nanos),
-            main_query_type: mainQueryStats.type,
-            main_query_build_scorer_time: this.nanoToMillie(mainQueryStats.breakdown.build_scorer),
-            main_query_weight_time: this.nanoToMillie(mainQueryStats.breakdown.create_weight),
-            main_query_docs_collect_time: this.nanoToMillie(mainQueryStats.breakdown.next_doc),
-            main_query_collect_time: this.nanoToMillie(mainQueryStats.breakdown.score),
-        }
-    },
-    setChildrenResults(child, results, index) {
-        const childName = `child_query_${index+1}`;
+    setQueryResults(name, results, query) {
+        results[`${name}_stats_time`] = this.nanoToMillie(query.time_in_nanos);
+        results[`${name}_type`] = query.type;
+        results[`${name}_description`] = query.description;
+        results[`${name}_build_scorer_time`]= this.nanoToMillie(query.breakdown.build_scorer);
+        results[`${name}_weight_time`] = this.nanoToMillie(query.breakdown.create_weight);
+        results[`${name}_docs_collect_time`] = this.nanoToMillie(query.breakdown.next_doc);
+        results[`${name}_score_collect_time`] = this.nanoToMillie(query.breakdown.score);
 
-        results[`${childName}_stats_time`]= this.nanoToMillie(child.time_in_nanos);
-        results[`${childName}_type`] = child.type;
-        results[`${childName}_description`] = child.description;
-        results[`${childName}_build_scorer_time`]= this.nanoToMillie(child.breakdown.build_scorer);
-        results[`${childName}_weight_time`] = this.nanoToMillie(child.breakdown.create_weight);
-        results[`${childName}_docs_collect_time`] = this.nanoToMillie(child.breakdown.next_doc);
-        results[`${childName}_score_collect_time`] = this.nanoToMillie(child.breakdown.score);
-        
-        return results
+        if (query.hasOwnProperty('children')) {
+            this.nextChar()
+            query.children.forEach((query, index)=> {
+                this.setQueryResults(`nested_query_${this.nested_token+(index+1)}`, results, query)
+            });
+        }
+        return results;
     },
-    fetchProfile(hit){
+    fetchProfile(hit) {
         const profile = objectGet(hit, 'body.profile.shards');
         const profileSearch = objectGet(profile[0], 'searches');
         return objectGet(profileSearch[0], 'query')[0];
     },
     nanoToMillie(nano){
         return nano / 1000000;
+    },
+    nextChar() {
+        if (!this.nested_token){
+            this.nested_token = 'A';
+        }
+        return String.fromCharCode(this.nested_token.charCodeAt(0) + 1).toUpperCase();
     }
 }
