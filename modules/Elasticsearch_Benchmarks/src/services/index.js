@@ -1,7 +1,8 @@
 const fsUtil = require('../../../../library/utils/fs');
 const elasticRepo = require('../repositories/elasticsearchRepo');
 const transformers = require('../transformers')
-const logger = require('../../../../library/utils/logger')
+const logger = require('../../../../library/utils/logger');
+const logzioClient = require('../../../../library/connectors/logzio')
 
 module.exports = {
     logMessage:{
@@ -29,6 +30,9 @@ module.exports = {
     },
     transmitResults(results){
         logger.log(this.logMessage.d);
+        results.forEach((object)=>{
+            logzioClient.sendLog(object);
+        })
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;

@@ -17,6 +17,7 @@ module.exports = {
             name: query.name,
             project: query.project,
             took: objectGet(hit,'body.took'),
+            type: query.type,
             ...this.getProfiles(hit)
         }
     },
