@@ -17,7 +17,6 @@ module.exports = {
         const mainQueryStats = this.fetchProfile(hit);
         let results = [];
         const options = {
-            name: 'main_query',
             results,
             mainQueryStats,
             took: hit.body.took,
@@ -39,19 +38,19 @@ module.exports = {
             target_index: options.query.index,
             root_query: options.root,
             took: options.took,
-            [`${options.name}_stats_time`]: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
-            [`${options.name}_type`]: options.mainQueryStats.type,
-            [`${options.name}_description`]: options.mainQueryStats.description,
-            [`${options.name}_build_scorer_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.build_scorer),
-            [`${options.name}_weight_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.create_weight),
-            [`${options.name}_docs_collect_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.next_doc),
-            [`${options.name}_score_collect_time`]: this.nanoToMillie(options.mainQueryStats.breakdown.score)
+            cluster: options.query.cluster,
+            query_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
+            query_type: options.mainQueryStats.type,
+            query_description: options.mainQueryStats.description,
+            query_build_scorer_time: this.nanoToMillie(options.mainQueryStats.breakdown.build_scorer),
+            query_weight_time: this.nanoToMillie(options.mainQueryStats.breakdown.create_weight),
+            query_docs_collect_time: this.nanoToMillie(options.mainQueryStats.breakdown.next_doc),
+            query_score_collect_time: this.nanoToMillie(options.mainQueryStats.breakdown.score)
         });
         if (options.mainQueryStats.hasOwnProperty('children')) {
             this.nextChar()
-            options.mainQueryStats.children.forEach((query, index)=> {
+            options.mainQueryStats.children.forEach((query)=> {
                 const nestedOptions = {
-                    name: `nested_query_${this.nested_token+(index+1)}`,
                     results: options.results,
                     mainQueryStats: query,
                     took: options.took,
