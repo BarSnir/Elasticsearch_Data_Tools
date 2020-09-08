@@ -91,7 +91,7 @@ module.exports = {
     },
     editDocDescription(doc){
         if(!this.longDescriptionTypes.hasOwnProperty(doc.query_type))   
-            return doc.query_type
+            return doc.query_description
 
         let str = doc.query_description;
         return str.replace(str.substring(str.indexOf('@'), str.indexOf('@')+9), "");
