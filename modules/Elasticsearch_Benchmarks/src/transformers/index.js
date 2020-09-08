@@ -94,6 +94,6 @@ module.exports = {
             return doc.query_description
 
         let str = doc.query_description;
-        return str.replace(str.substring(str.indexOf('@'), str.indexOf('@')+9), "");
+        return str.replace(str.substring(str.indexOf('@'), str.indexOf('}')+1), "");
     }
 }
