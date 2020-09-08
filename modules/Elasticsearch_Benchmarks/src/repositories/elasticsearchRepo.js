@@ -14,9 +14,9 @@ module.exports = {
         });
         logger.log(this.logMessages.a)
     },
-    executeQuery(query) {
+    executeQuery(query, index) {
         return this.elasticClient.search({
-            index: process.env.ELASTICSEARCH_INDEX_NAME,
+            index: index,
             body: query
         });
     }

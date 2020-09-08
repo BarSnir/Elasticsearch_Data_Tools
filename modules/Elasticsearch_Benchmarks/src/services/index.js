@@ -20,7 +20,7 @@ module.exports = {
     executeQueries(queries){
         logger.log(this.logMessage.b);
         const promises = queries.map((queryObj)=>{
-            return elasticRepo.executeQuery(queryObj.query);
+            return elasticRepo.executeQuery(queryObj.query, queryObj.index);
         });
         return Promise.all(promises)
     },
