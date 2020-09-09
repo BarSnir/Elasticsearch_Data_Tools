@@ -2,7 +2,6 @@ const logger = require('../../../../library/utils/logger')
 const objectGet = require('object-path-get');
 
 module.exports = {
-    nested_token: null,
     logMessages:{
         a: "Preparing data...\n"
     },
@@ -17,10 +16,7 @@ module.exports = {
             results.push(this.transformAggsStats(queries[index], hit));
         });
         results = [].concat.apply([], results);
-        results = results.filter(item => Object.keys(item).length)
-        console.log(results);
-        process.exit(0);
-        return 
+        return results.filter(item => Object.keys(item).length)
     },
     transformSearchStats(query, hit) {
         const options = this.getSearchDocOptions(query, hit, true);
@@ -29,7 +25,7 @@ module.exports = {
         return results;
     },
     getSearchDocOptions(query, hit, isRootQuery){
-        const mainQueryStats = this.fetchProfile(hit);
+        const mainQueryStats = this.fetchSearchProfile(hit);
         const method = "getSearchDoc";
         return {
             mainQueryStats,
@@ -56,33 +52,23 @@ module.exports = {
             query,
             root: isRootQuery,
             method,
-            edit: true
+            edit: false
         }
     },
     setQueryResults(options) {
-        const method = options.method;
-        let doc = this[method](options);
+        let doc = this[options.method](options);
         doc = this.validateDoc(doc, options);
         options.results.push(doc);
-        
+
         if (options.mainQueryStats.hasOwnProperty('children')) {
-            this.nextChar()
             options.mainQueryStats.children.forEach((query)=> {
-                const nestedOptions = {
-                    results: options.results,
-                    mainQueryStats: query,
-                    took: options.took,
-                    query: options.query,
-                    root: false,
-                    method: options.method,
-                    edit: options.edit 
-                };
+                const nestedOptions = this.getNestedDocOptions(options, query);
                 this.setQueryResults(nestedOptions)
             });
         }
         return options.results;
     },
-    fetchProfile(hit) {
+    fetchSearchProfile(hit) {
         const profile = objectGet(hit, 'body.profile.shards');
         const profileSearch = objectGet(profile[0], 'searches');
         return objectGet(profileSearch[0], 'query')[0];
@@ -91,14 +77,19 @@ module.exports = {
         const profile = objectGet(hit, 'body.profile.shards');
         return objectGet(profile[0], 'aggregations')[0];
     },
+    getNestedDocOptions(options, query){
+        return {
+            results: options.results,
+            mainQueryStats: query,
+            took: options.took,
+            query: options.query,
+            root: false,
+            method: options.method,
+            edit: options.edit 
+        };
+    },
     nanoToMillie(nano){
         return nano / 1000000;
-    },
-    nextChar() {
-        if (!this.nested_token){
-            this.nested_token = 'A';
-        }
-        return String.fromCharCode(this.nested_token.charCodeAt(0) + 1).toUpperCase();
     },
     getSearchDoc(options){
         return {
