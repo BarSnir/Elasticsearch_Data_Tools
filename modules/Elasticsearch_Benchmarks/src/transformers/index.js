@@ -14,9 +14,10 @@ module.exports = {
         hits.forEach((hit, index)=>{
             results.push(this.transformSearchStats(queries[index], hit));
             results.push(this.transformAggsStats(queries[index], hit));
+            results.push(this.transformCollectorsStats(queries[index], hit));
         });
         results = [].concat.apply([], results);
-        return results.filter(item => Object.keys(item).length)
+        return results.filter(item => Object.keys(item).length);
     },
     transformSearchStats(query, hit) {
         const options = this.getSearchDocOptions(query, hit, true);
@@ -55,6 +56,25 @@ module.exports = {
             edit: false
         }
     },
+    transformCollectorsStats(query, hit){
+        const options = this.getCollectorsDocOptions(query, hit, true);
+        if (!options.mainQueryStats) return {}
+        options.results = []
+        results = this.setQueryResults(options);
+        return results;
+    },
+    getCollectorsDocOptions(query, hit, isRootQuery){
+        const mainQueryStats = this.fetchCollectorsProfile(hit);
+        const method = "getCollectorDoc";
+        return {
+            mainQueryStats,
+            took: hit.body.took,
+            query,
+            root: isRootQuery,
+            method,
+            edit: false
+        }
+    },
     setQueryResults(options) {
         let doc = this[options.method](options);
         doc = this.validateDoc(doc, options);
@@ -76,6 +96,11 @@ module.exports = {
     fetchAggsProfile(hit) {
         const profile = objectGet(hit, 'body.profile.shards');
         return objectGet(profile[0], 'aggregations')[0];
+    },
+    fetchCollectorsProfile(hit){
+        const profile = objectGet(hit, 'body.profile.shards');
+        const profileSearch = objectGet(profile[0], 'searches');
+        return objectGet(profileSearch[0], 'collector')[0];
     },
     getNestedDocOptions(options, query){
         return {
@@ -132,6 +157,21 @@ module.exports = {
             aggregation_docs_collect_time: this.nanoToMillie(
                 options.mainQueryStats.breakdown.collect
             ),
+        };
+    },
+    getCollectorDoc(options){
+        return {
+            query_name: options.query.name,
+            project: options.query.project,
+            type: options.query.type,
+            target_index: options.query.index,
+            root_collector: options.root,
+            took: options.took,
+            cluster: options.query.cluster,
+            query_section: "collector",
+            collector_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
+            collector_type: options.mainQueryStats.reason,
+            collector_name: options.mainQueryStats.name
         };
     },
     validateDoc(doc, options) {
