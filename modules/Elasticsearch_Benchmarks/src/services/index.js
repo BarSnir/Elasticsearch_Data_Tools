@@ -1,8 +1,8 @@
-const fsUtil = require('../../../../library/utils/fs');
+const fsUtil = require('../../library/utils/fs');
 const elasticRepo = require('../repositories/elasticsearchRepo');
 const transformers = require('../transformers')
-const logger = require('../../../../library/utils/logger');
-const logzioClient = require('../../../../library/connectors/logzio')
+const logger = require('../../library/utils/logger');
+const logzioClient = require('../../library/connectors/logzio')
 
 module.exports = {
     logMessage:{

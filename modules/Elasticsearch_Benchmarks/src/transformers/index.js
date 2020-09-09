@@ -1,4 +1,4 @@
-const logger = require('../../../../library/utils/logger')
+const logger = require('../../library/utils/logger')
 const objectGet = require('object-path-get');
 
 module.exports = {
