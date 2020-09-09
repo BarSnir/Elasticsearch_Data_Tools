@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const elasticRepo = require('./repositories/elasticsearchRepo');
-const logzioClient = require('../../../library/connectors/logzio')
-const logger = require('./../../../library/utils/logger');
+const logzioClient = require('../library/connectors/logzio')
+const logger = require('../library/utils/logger');
 
 module.exports = {
     env: 'development',

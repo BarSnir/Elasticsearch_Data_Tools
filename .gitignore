@@ -34,7 +34,7 @@ skeletons/
 version.sh
 DockerFile
 .dockerignore
-
+modules/Elasticsearch_Benchmarks/library
 # nyc test coverage
 .nyc_output
 
