@@ -11,48 +11,53 @@ module.exports = {
     },
     transformResults(queries, hits){
         logger.log(this.logMessages.a);
-        let results = hits.map((hit, index)=>{
-            return this.transform(queries[index], hit)
+        let results = [];
+        hits.forEach((hit, index)=>{
+            results.push(this.transformSearchStats(queries[index], hit));
+            results.push(this.transformAggsStats(queries[index], hit));
         });
         results = [].concat.apply([], results);
-        hits.map((hit, index)=>{
-           results.push(this.transformAggs(queries[index], hit)) 
-        });
+        results = results.filter(item => Object.keys(item).length)
         console.log(results);
-        process.exit(0)
+        process.exit(0);
+        return 
+    },
+    transformSearchStats(query, hit) {
+        const options = this.getSearchDocOptions(query, hit, true);
+        options.results = [];
+        results = this.setQueryResults(options);
         return results;
     },
-    transform(query, hit) {
+    getSearchDocOptions(query, hit, isRootQuery){
         const mainQueryStats = this.fetchProfile(hit);
-        let results = [];
-        const options = {
-            results,
+        const method = "getSearchDoc";
+        return {
             mainQueryStats,
             took: hit.body.took,
             query,
-            root: true,
-            method: "getSearchDoc",
+            root: isRootQuery,
+            method,
             edit: true
         }
+    },
+    transformAggsStats(query, hit){
+        const options = this.getAggsDocOptions(query, hit, true);
+        if (!options.mainQueryStats) return {}
+        options.results = []
         results = this.setQueryResults(options);
         return results;
     },
-    transformAggs(query, hit){
-        const mainAggsStats = this.fetchAggsProfile(hit);
-        if(!mainAggsStats) return {}
-
-        let results = [];
-        const options = {
-            results,
-            mainQueryStats:mainAggsStats,
+    getAggsDocOptions(query, hit, isRootQuery){
+        const mainQueryStats = this.fetchAggsProfile(hit);
+        const method = "getAggsDoc";
+        return {
+            mainQueryStats,
             took: hit.body.took,
             query,
-            root: true,
-            method: "getAggsDoc",
-            edit: false
+            root: isRootQuery,
+            method,
+            edit: true
         }
-        results = this.setQueryResults(options);
-        return results;
     },
     setQueryResults(options) {
         const method = options.method;
@@ -127,10 +132,15 @@ module.exports = {
             aggregation_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
             aggregation_type: options.mainQueryStats.type,
             aggregation_description: options.mainQueryStats.description,
-            aggregation_build_scorer_time: this.nanoToMillie(options.mainQueryStats.breakdown.build_scorer),
-            aggregation_weight_time: this.nanoToMillie(options.mainQueryStats.breakdown.create_weight),
-            aggregation_docs_collect_time: this.nanoToMillie(options.mainQueryStats.breakdown.next_doc),
-            aggregation_score_collect_time: this.nanoToMillie(options.mainQueryStats.breakdown.score)
+            aggregation_build_aggregation_time: this.nanoToMillie(
+                options.mainQueryStats.breakdown.build_aggregation
+            ),
+            aggregation_initialize_time: this.nanoToMillie(
+                options.mainQueryStats.breakdown.initialize
+            ),
+            aggregation_docs_collect_time: this.nanoToMillie(
+                options.mainQueryStats.breakdown.collect
+            ),
         };
     },
     validateDoc(doc, options) {
