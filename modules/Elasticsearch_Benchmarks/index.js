@@ -2,9 +2,9 @@ const server = require('./src/server');
 const services = require('./src/services')
 
 server.configCWD()
-.configEnv()
-.configServer()
-.configRepo();
+    .configEnv()
+    .configServer()
+    .configRepo();
 
 async function runModule() {
     const queries = services.getProfilerQueries();
@@ -12,11 +12,6 @@ async function runModule() {
     const results = services.getResults(queries, hits);
     services.transmitResults(results);
 }
-// runModule();
-// setInterval(runModule, process.env.SAMPLE_PERIOD);
 
-function initServer(){
-
-}
-
-initServer()
+runModule();
+setInterval(runModule, process.env.SAMPLE_PERIOD);
