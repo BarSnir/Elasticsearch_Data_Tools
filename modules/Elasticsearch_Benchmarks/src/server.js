@@ -4,6 +4,7 @@ const elasticRepo = require('./repositories/elasticsearchRepo');
 const logzioClient = require('../library/connectors/logzio')
 const logger = require('../library/utils/logger');
 const app = require('express');
+const bodyParser = require('body-parser');
 const router = require('../src/router');
 
 module.exports = {

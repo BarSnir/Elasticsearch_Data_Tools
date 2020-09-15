@@ -13,5 +13,5 @@ async function runModule() {
     services.transmitResults(results);
 }
 
-runModule();
-setInterval(runModule, process.env.SAMPLE_PERIOD);
+// runModule();
+// setInterval(runModule, process.env.SAMPLE_PERIOD);
