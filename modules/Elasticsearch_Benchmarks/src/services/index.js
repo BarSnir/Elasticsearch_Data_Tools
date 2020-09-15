@@ -10,8 +10,7 @@ module.exports = {
         a: 'Step2: Collecting json query files.\n',
         b: 'Step3: Collected json query files, Executing queries against Elasticsearch.\n',
         c: 'Step4: Got profiled queries results, now transforming them.\n',
-        d: 'Step5: Results been transformed, uploading to Logzio.\n',
-        e: 'query received'
+        d: 'Step5: Results been transformed, uploading to Logzio.\n'
     },
     getProfilerQueries(){
         logger.log(this.logMessage.a);
@@ -31,13 +30,11 @@ module.exports = {
         return transformers.transformResults(queries, hits);
     },
     transformRequestQuery(req, res){
-        console.log(req.params);
-        if(!validator.isSearchReq(req.params)){
-            res.send('This is not search request').status(403);
+        if(!validator.isSearchReq(req.params, req.body)){
+            res.send('This is not search request');
             return
-        }
-        console.log(req.params);
-
+        } 
+        transformers.transformsQueryToJson(req);
         res.send("query received");
     },
     transmitResults(results){

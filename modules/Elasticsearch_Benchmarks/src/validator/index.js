@@ -1,7 +1,7 @@
 module.exports = {
-    isSearchReq(params){
+    isSearchReq(params, body){
         for (let key in params) {
-            if (params[key] && params[key].includes('search')) {
+            if (params[key] && params[key].includes('search') && Object.keys(body).length) {
                 return true
             }
         }

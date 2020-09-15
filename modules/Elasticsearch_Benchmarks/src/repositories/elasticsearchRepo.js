@@ -4,7 +4,7 @@ const logger = require('../../library/utils/logger');
 module.exports = {
     elasticClient: null,
     logMessages:{
-        a:`Step1: Connected to Elasticsearch.\n`
+        a:`Step1: Initializing server\n`
     },
     initializeECConnection() {
         this.elasticClient = elasticConnector.getEcClient({
