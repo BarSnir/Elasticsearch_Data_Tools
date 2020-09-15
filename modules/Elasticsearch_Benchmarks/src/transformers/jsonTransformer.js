@@ -11,7 +11,6 @@ module.exports = {
             .generateJsonToken(template)
             .getProject(template);
 
-        console.log(template);
         return template;
     },
     getQuery(req ,template){

@@ -31,11 +31,12 @@ module.exports = {
     },
     transformRequestQuery(req, res){
         if(!validator.isSearchReq(req.params, req.body)){
-            res.send('This is not search request');
+            res.send('This is not search request\n');
             return;
         } 
-        transformers.transformsQueryToJson(req);
-        res.send("query received");
+        const query = transformers.transformsQueryToJson(req);
+        
+        res.send("Query received\n");
     },
     transmitResults(results){
         logger.log(this.logMessage.d);
