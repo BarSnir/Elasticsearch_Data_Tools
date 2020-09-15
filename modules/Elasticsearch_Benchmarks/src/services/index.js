@@ -2,14 +2,16 @@ const fsUtil = require('../../library/utils/fs');
 const elasticRepo = require('../repositories/elasticsearchRepo');
 const transformers = require('../transformers')
 const logger = require('../../library/utils/logger');
-const logzioClient = require('../../library/connectors/logzio')
+const logzioClient = require('../../library/connectors/logzio');
+const validator = require('../validator');
 
 module.exports = {
     logMessage:{
         a: 'Step2: Collecting json query files.\n',
         b: 'Step3: Collected json query files, Executing queries against Elasticsearch.\n',
         c: 'Step4: Got profiled queries results, now transforming them.\n',
-        d: 'Step5: Results been transformed, uploading to Logzio.\n'
+        d: 'Step5: Results been transformed, uploading to Logzio.\n',
+        e: 'query received'
     },
     getProfilerQueries(){
         logger.log(this.logMessage.a);
@@ -28,11 +30,21 @@ module.exports = {
         logger.log(this.logMessage.c);
         return transformers.transformResults(queries, hits);
     },
+    transformRequestQuery(req, res){
+        console.log(req.params);
+        if(!validator.isSearchReq(req.params)){
+            res.send('This is not search request').status(403);
+            return
+        }
+        console.log(req.params);
+
+        res.send("query received");
+    },
     transmitResults(results){
         logger.log(this.logMessage.d);
         results.forEach((object)=>{
             logzioClient.sendLog(object);
-        })
+        });
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;

@@ -32,6 +32,7 @@ search_bar_skeleton.json
 mock.json
 skeletons/
 version.sh
+curl.sh
 DockerFile
 .dockerignore
 modules/Elasticsearch_Benchmarks/library

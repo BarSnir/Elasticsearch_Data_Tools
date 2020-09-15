@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require("body-parser");
+const services = require('../services');
 
 router.use(bodyParser.json())
 
-router.get('/:id/:id2?/:id3?/:id4?', function (req, res) {
-    console.log(req.params);
-    console.log(req.body);
-    res.send("query received");
-});
+router.get('/:id/:id2?/:id3?/:id4?', services.transformRequestQuery);
 
 module.exports = router;
