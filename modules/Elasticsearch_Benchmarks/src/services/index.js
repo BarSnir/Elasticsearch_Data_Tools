@@ -32,7 +32,7 @@ module.exports = {
     transformRequestQuery(req, res){
         if(!validator.isSearchReq(req.params, req.body)){
             res.send('This is not search request');
-            return
+            return;
         } 
         transformers.transformsQueryToJson(req);
         res.send("query received");
