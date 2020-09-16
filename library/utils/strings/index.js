@@ -5,7 +5,7 @@ module.exports = {
     isEndOfArry(condition){
        return condition ? this.emptyString : this.comma
     },
-    generate_token(length=30){
+    generate_token(length=10){
         //edit the token allowed characters
         var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
         var b = [];  

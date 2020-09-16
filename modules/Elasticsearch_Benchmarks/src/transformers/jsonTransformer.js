@@ -1,4 +1,5 @@
 const stringUtils = require('../../library/utils/strings');
+const objectGet =require('object-path-get');
 
 module.exports = {
     transformReqToJson(req){
@@ -9,8 +10,8 @@ module.exports = {
             .getCluster(template)
             .getAgent(template)
             .generateJsonToken(template)
+            .addQueryNamed(template)
             .getProject(template);
-
         return template;
     },
     getQuery(req ,template){
@@ -21,9 +22,18 @@ module.exports = {
         template.query.profile = true;
         return this;
     },
+    addQueryNamed(template){
+        const rootObject = objectGet(template, 'query.query');
+        if(!rootObject){
+            return this;
+        }
+        const queryName = this.getQueryName(rootObject);
+        template.name = `${template.index}_${queryName}_${template.name}`;
+        return this;
+    },
     getIndex(req, template){
         const path = req.path;
-        template.index = path.split("/").filter(item => item.length)[0]
+        template.index = path.split("/").filter(item => item.length)[0];
         return this;
     },
     getCluster(template){
@@ -41,6 +51,21 @@ module.exports = {
     getProject(template){
         template.project = "ES_PROFILER";
         return this;
-    }
+    },
+    getQueryName(object){
+        let queryName = '';
+        const nestedKeys = Object.keys(object);
+        for (let i = 0; i < nestedKeys.length; i++){
+            let key = nestedKeys[i]
+            if(key === '_name'){
+                queryName = object[key]
+                break;
+            }
 
+            if( Object.keys(object[key]).length) {
+                queryName = this.getQueryName(object[key])
+            }
+        }
+        return queryName;
+    }
 }

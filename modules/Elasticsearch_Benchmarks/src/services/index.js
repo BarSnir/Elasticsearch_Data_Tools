@@ -4,6 +4,7 @@ const transformers = require('../transformers')
 const logger = require('../../library/utils/logger');
 const logzioClient = require('../../library/connectors/logzio');
 const validator = require('../validator');
+const fs = require('../../library/utils/fs');
 
 module.exports = {
     logMessage:{
@@ -34,8 +35,16 @@ module.exports = {
             res.send('This is not search request\n');
             return;
         } 
-        const query = transformers.transformsQueryToJson(req);
-        
+        const payload = transformers.transformsQueryToJson(req);
+        console.log(payload);
+        const path = "./templates/Queries/";
+        const fileName = payload.name;
+        const params = {
+            payload,
+            path,
+            fileName
+        }
+        fs.writeJsonToPath(params);
         res.send("Query received\n");
     },
     transmitResults(results){

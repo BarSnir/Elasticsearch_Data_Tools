@@ -41,7 +41,7 @@ modules/Elasticsearch_Benchmarks/library
 
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
-
+vehicles_feed_v1_*.json
 # Bower dependency directory (https://bower.io/)
 bower_components
 
