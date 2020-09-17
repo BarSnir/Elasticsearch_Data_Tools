@@ -32,7 +32,7 @@ search_bar_skeleton.json
 mock.json
 skeletons/
 version.sh
-curl.sh
+curl*.sh
 DockerFile
 .dockerignore
 modules/Elasticsearch_Benchmarks/library
@@ -41,7 +41,8 @@ modules/Elasticsearch_Benchmarks/library
 
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
-vehicles_feed_v1_*.json
+query_*.json
+aggregation_*.json
 # Bower dependency directory (https://bower.io/)
 bower_components
 

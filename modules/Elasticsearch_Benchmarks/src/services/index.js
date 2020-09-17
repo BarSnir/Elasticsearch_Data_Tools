@@ -37,7 +37,7 @@ module.exports = {
         } 
         const payload = transformers.transformsQueryToJson(req);
         console.log(payload);
-        const path = "./templates/Queries/";
+        const path = this.getJsonsDirPath();
         const fileName = payload.name;
         const params = {
             payload,
