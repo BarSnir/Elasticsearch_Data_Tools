@@ -5,6 +5,7 @@ const logger = require('../../library/utils/logger');
 const logzioClient = require('../../library/connectors/logzio');
 const validator = require('../validator');
 const fs = require('../../library/utils/fs');
+const timeUtils = require('../../library/utils/time');
 
 module.exports = {
     logMessage:{
@@ -12,6 +13,23 @@ module.exports = {
         b: 'Step3: Collected json query files, Executing queries against Elasticsearch.\n',
         c: 'Step4: Got profiled queries results, now transforming them.\n',
         d: 'Step5: Results been transformed, uploading to Logzio.\n'
+    },
+    removeDeprecatedQueries(){
+        const path = this.getJsonsDirPath();
+        const jsonsFiles = fsUtil.getJsonFiles(path);
+        for (let i = 0; i < jsonsFiles.length; i++){
+            const template = fsUtil.getJsonSync(`${path}/${jsonsFiles[i]}`);
+            if (!template.hasOwnProperty('storeTime')) continue;
+
+            const fileNeedToBeRemoved = timeUtils.isDurationExceed(template.storeTime);
+            if(fileNeedToBeRemoved){
+                const params = {
+                    fileName:template.fileName,
+                    path
+                }
+                fsUtil.removeFile(params);
+            }
+        }
     },
     getProfilerQueries(){
         logger.log(this.logMessage.a);

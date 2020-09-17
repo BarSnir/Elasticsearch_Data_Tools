@@ -2,7 +2,7 @@ const reportTransformer = require("./reportTransformer");
 const jsonTransformer = require("./jsonTransformer");
 
 module.exports = {
-    getResults(queries, hits) {
+    transformResults(queries, hits) {
         return reportTransformer.transformResults(queries, hits);
     },
     transformsQueryToJson(req){

@@ -82,7 +82,7 @@ module.exports = {
         return Object.keys(queryObject.aggs)[0]
     },
     storeDate(template){
-        template.time = timeUtils.getCurrentDate();
+        template.storeTime = timeUtils.getCurrentDate();
         return this;
     }
 }
