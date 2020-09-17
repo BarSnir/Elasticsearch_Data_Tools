@@ -5,6 +5,9 @@ const services = require('../services');
 
 router.use(bodyParser.json())
 
-router.get('/:id/:id2?/:id3?/:id4?', services.transformRequestQuery.bind(services));
+router.get(
+    '/:id/:id2?/:id3?/:id4?',
+     services.transformRequestQuery.bind(services)
+);
 
 module.exports = router;

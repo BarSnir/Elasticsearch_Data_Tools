@@ -32,7 +32,7 @@ module.exports = {
     },
     transformRequestQuery(req, res){
         if(!validator.isSearchReq(req.params, req.body)){
-            res.send('This is not search request\n');
+            res.send(this.getMessage('e01'));
             return;
         } 
         const payload = transformers.transformsQueryToJson(req);
@@ -44,8 +44,12 @@ module.exports = {
             path,
             fileName
         }
+        if (validator.isTypeQueryThresholdExceed(params)){
+            res.send(this.getMessage('e02'))
+            return;
+        }
         fs.writeJsonToPath(params);
-        res.send("Query received\n");
+        res.send(this.getMessage('success'));
     },
     transmitResults(results){
         logger.log(this.logMessage.d);
@@ -55,5 +59,13 @@ module.exports = {
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;
+    },
+    getMessage(messageKey){
+        const messages = {
+            success: "Query saved\n",
+            e01: 'This is not search request\n',
+            e02: `This type of query appears ${process.env.SEARCH_TYPE_SIZE} times. Query didn't saved to filesystem. \n`,
+        }
+        return messages[messageKey];
     }
 }
