@@ -1,4 +1,5 @@
 const stringUtils = require('../../library/utils/strings');
+const timeUtils = require('../../library/utils/time');
 const objectGet =require('object-path-get');
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
             .addQueryNamed(template)
             .addAggName(template)
             .getProject(template)
-            .getStoreTime(template);
+            .storeDate(template);
         return template;
     },
     getQuery(req ,template){
@@ -37,9 +38,7 @@ module.exports = {
         if (template.name.includes("query_")) return this;
         const aggName = this.getAggregationName(template.query);
         template.name = `aggregation_${template.index}_${aggName}_${template.name}`;
-
         return this
-
     },  
     getIndex(req, template){
         const path = req.path;
@@ -82,7 +81,9 @@ module.exports = {
     getAggregationName(queryObject){
         return Object.keys(queryObject.aggs)[0]
     },
-    getStoreTime(template){
-
+    storeDate(template){
+        template.time = timeUtils.getCurrentDate();
+        console.log(template.time);
+        return this;
     }
 }
