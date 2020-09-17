@@ -11,5 +11,9 @@ module.exports = {
     },
     getJsonFiles(path){
         return fs.readdirSync(path).filter(fn => fn.endsWith(this.jsonExt));
+    },
+    removeFile(params){
+        fs.unlinkSync(params.path)
+        logger.log(`File ${params.fileName}.json removed from ${params.path}`);
     }
 }
