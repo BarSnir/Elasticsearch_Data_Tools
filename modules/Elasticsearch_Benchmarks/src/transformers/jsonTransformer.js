@@ -83,7 +83,6 @@ module.exports = {
     },
     storeDate(template){
         template.time = timeUtils.getCurrentDate();
-        console.log(template.time);
         return this;
     }
 }
