@@ -6,7 +6,7 @@ const logger = require('./../../../library/utils/logger');
 module.exports = {
     env: 'development',
     logMessages:{
-        a:`Connection establish by Elastic cloud.\n`,
+        a:`Connection establish by Elastic cloud.`,
     },
     configEnv(){
         dotenv.config({path:path.resolve(__dirname, '../.env')});

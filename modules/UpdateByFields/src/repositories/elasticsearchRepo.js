@@ -5,7 +5,7 @@ const fs = require('fs');
 module.exports = {
     elasticClient: null,
     logMessages:{
-        a:`Step1: Connected to Elasticsearch.\n`
+        a:`Step1: Connected to Elasticsearch.`
     },
     initializeECConnection() {
         this.elasticClient = elasticConnector.getEcClient({

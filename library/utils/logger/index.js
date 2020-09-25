@@ -3,7 +3,7 @@ const timeUtil = require('../time');
 module.exports = {
     log(message){
         if(this.showLogs()){
-            console.log(`[${timeUtil.getLoggerTime()}]  ${message}`);
+            console.log(`\n [${timeUtil.getLoggerTime()}]  ${message} \n`);
         }
     },
     error(e){

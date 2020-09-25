@@ -1,48 +1,49 @@
 const elasticRepo = require('../repositories/elasticsearchRepo');
 const objectGet = require('object-path-get');
 const query = require('../../queries/query.json');
-const fs  = require('fs');
-
+const logger = require('../../../../library/utils/logger');
+const progressBar = require('../../../../library/utils/progressbar');
 
 const services = {
     hitsPath: 'body.hits.hits',
+    defaultBarMSG: "Progress running.",
+    defaultBarColor: "blue",
     termsQueryLimit: 1024,
     counter: 0,
     completeCount: 0,
+    logMessage:{
+        a:`There is no more items to scroll on.`,
+        b:`Bulks can take a while, application still running...`
+    },
     async runModule(scrollId=false) {
-        let sourceRes;
-        if(scrollId){
-            sourceRes = await elasticRepo.scrollSearch(scrollId);
-        } else {
-            sourceRes = await elasticRepo.firstScrollSearch(
-                process.env.SOURCE_INDEX,
-                query
-            );
-        }
-        if(!(objectGet(sourceRes, this.hitsPath)).length){
-            process.exit(0);
-        }
-        const docObject = this.generateDocumentsId(
-            objectGet(sourceRes, this.hitsPath)
-        );
+        const sourceRes = await this.sourceSearch(scrollId);
+        const sourceDocs = (objectGet(sourceRes, this.hitsPath));
+        if(!sourceDocs.length) this.closeProcess()
 
-        
-        const targetQuery = this.generateTargetQuery(docObject);
-        const firstTargetRes = await elasticRepo.search(
+        const sourceDestObj = this.generateDocumentsId(sourceDocs);
+        const destIndexQuery = this.generateTargetQuery(sourceDestObj);
+        const targetRes = await elasticRepo.search(
             process.env.TARGET_INDEX,
-            targetQuery
+            destIndexQuery
         );
         const arrangedObj = await this.arrangeObj(
-            objectGet(firstTargetRes, this.hitsPath),
-            docObject
+            objectGet(targetRes, this.hitsPath),
+            sourceDestObj
         );
-
         const bulk = await this.generateBulk(arrangedObj);
-        //await elasticRepo.bulk(bulk);
-        console.log(`Bulk No. ${this.counter++} with bulk length ${bulk.length/2}`);
-        if(sourceRes.body._scroll_id){
-            this.runModule(sourceRes.body._scroll_id)
-        }
+        await elasticRepo.bulk(bulk);
+        progressBar.increase();
+        this.runModule(sourceRes.body._scroll_id);
+    },
+    async sourceSearch(scrollId){
+        if(scrollId) return elasticRepo.scrollSearch(scrollId);
+        const res = await elasticRepo.firstScrollSearch(
+            process.env.SOURCE_INDEX,
+            query
+        );
+        logger.log(this.logMessage.b)
+        this.runProgressBar(res.body.hits.total); 
+        return res
     },
     generateDocumentsId(documents){
         const documentIdsObj = {};
@@ -87,10 +88,6 @@ const services = {
                 let destDoc = doc._source;
                 let srcDoc = srcKeysObj[key].src;
                 let destId = doc._id;
-                if(destDoc[changedFieldsArr[i]] == srcDoc[changedFieldsArr[i]] ){
-                    console.log(`complete ${this.completeCount++}`);
-                    continue;
-                }
                 destDoc[changedFieldsArr[i]] = srcDoc[changedFieldsArr[i]];
                 srcKeysObj[key]['dest'] = destDoc;
                 srcKeysObj[key]['dest_id'] = destId;
@@ -101,26 +98,12 @@ const services = {
     async generateBulk(arrangedObj){
         const bulk = [];
         for (let k in arrangedObj) {
-            const item = arrangedObj[k];
+            let item = arrangedObj[k];
             if(!item.dest){
-                
-                let id = this.fetchId(item.src);
-                let dest = await elasticRepo.search(
-                             process.env.TARGET_INDEX,
-                             {
-                                query:{
-                                    term:{
-                                        [process.env.TARGET_FIELD]: id
-                                    }
-                                }
-                            }
-                        );
-                if(!objectGet(dest, this.hitsPath)[0]){
+                item = await this.getSingleItem(item);
+                if(!item.dest_id){
                     continue;
                 }
-                item.dest = objectGet(dest, this.hitsPath)[0]['_source'];
-                item.dest_id = objectGet(dest, this.hitsPath)[0]['_id']
-                console.log(`Applying assistance for id: ${item.dest_id}`);
             }
             const bulkDirection = { update: { 
                 _index: process.env.TARGET_INDEX,
@@ -132,6 +115,38 @@ const services = {
             bulk.push(bulkDirection, document);
         }
         return bulk;
+    },
+    async getSingleItem(item) {
+        let id = this.fetchId(item.src);
+        let dest = await elasticRepo.search(
+            process.env.TARGET_INDEX,
+            {
+                query:{
+                    term:{
+                        [process.env.TARGET_FIELD]: id
+                    }
+                }
+            }
+        );
+        let destDoc = objectGet(dest, this.hitsPath)[0]
+        if (!destDoc) {
+            item.dest = [];
+            return item;
+        } 
+        item.dest = destDoc['_source'];
+        item.dest_id = destDoc['_id'];
+        return item;
+    },
+    runProgressBar(total){
+        this.barColor = process.env.ELASTICSEARCH_PROGRESS_BAR_COLOR || this.defaultBarColor;
+        this.barMessage = process.env.ELASTICSEARCH_PROGRESS_BAR_MSG || this.defaultBarMSG;
+        progressBar.construct(this.barColor, this.barMessage);
+        progressBar.start(Math.ceil(total/1000));
+    },
+    closeProcess(){
+        logger.log(this.logMessage.a);
+        progressBar.stop();
+        process.exit(0);
     }
 }
 
