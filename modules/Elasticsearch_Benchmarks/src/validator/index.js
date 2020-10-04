@@ -13,6 +13,7 @@ module.exports = {
         const jsonFiles = fsUtils.getJsonFiles(`${process.cwd()}/templates/Queries`);
         const newFileName = params.fileName;
         const token = params.payload.token;
+        console.log(params);
         const str = newFileName.replace(token, "");
         const threshold = process.env.SEARCH_TYPE_SIZE;
         let counter = 0;

@@ -104,3 +104,40 @@ describe('gotProperQueryStructure', () => {
         expect(results).to.be.true;
     });
 });
+
+describe("isTypeQueryThresholdExceed", ()=>{
+    it('should return false', ()=>{
+                //assign
+                const params = getPayloadMock();
+                //action
+                const results = validator.isTypeQueryThresholdExceed(params);
+                //results
+                expect(results).to.be.true;
+    });
+});
+
+
+
+function getPayloadMock(){
+    return {
+        "payload":{
+            "query":{
+                "profile":true,
+                "size":3,
+                "query":{
+                    "function_score":{
+                        "_name":"test_a",
+                    }
+                }
+            },
+            "index":"vehicles_feed_v1",
+            "cluster":"Y2-EC-DEV",
+            "type":"es_profiler_agent",
+            "name":"query_vehicles_feed_v1_test_xiKPTqWxzc",
+            "token":"xiKPTqWxzc",
+            "project":"ES_PROFILER",
+            "storeTime":"10-4-2020",
+        },
+        "fileName":"query_vehicles_feed_v1_test_xiKPTqWxzc"
+    }
+}
