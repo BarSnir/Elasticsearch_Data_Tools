@@ -7,6 +7,7 @@
     "commonFieldsAggsModule": "node ./modules/FindCommonFieldsByField/index.js",
     "commonFieldsJsonModule": "node ./modules/FindCommonFieldsByJson/index.js",
     "esBenchmarks": "nodemon ./modules/Elasticsearch_Benchmarks/index.js",
+    "esBenchmarks_test": "jest ./modules/Elasticsearch_Benchmarks",
     "updateByField": "node ./modules/UpdateByFields/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
