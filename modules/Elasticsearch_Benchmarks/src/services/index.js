@@ -22,7 +22,6 @@ module.exports = {
             if (!template.hasOwnProperty('storeTime')) continue;
             
             const fileNeedToBeRemoved = timeUtils.isDurationExceed(template.storeTime);
-            console.log(path);
             if(fileNeedToBeRemoved){
                 const params = {
                     fileName: jsonsFiles[i],
@@ -55,7 +54,6 @@ module.exports = {
             return;
         } 
         const payload = transformers.transformsQueryToJson(req);
-        console.log(payload);
         const path = this.getJsonsDirPath();
         const fileName = payload.name;
         const params = {
