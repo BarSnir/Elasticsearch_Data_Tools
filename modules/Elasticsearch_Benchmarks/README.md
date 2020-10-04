@@ -1,1 +1,2 @@
-<img src="./assets/diagram.png" width="650" height="650" style="display:block;margin:10px auto;"/>
+## Elasticsearch Benchmarking module:
+<img src="./assets/diagram.png" width="100%" height="900" />
