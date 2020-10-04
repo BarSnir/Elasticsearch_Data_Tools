@@ -2,5 +2,5 @@
 
 ### Diagram:
 <p align="center">
- <img src="./assets/diagram.png" width="600" height="600" />
+ <img src="./assets/diagram.png" width="450" height="450" />
 </p>
