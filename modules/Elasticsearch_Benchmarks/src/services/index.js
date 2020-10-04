@@ -20,11 +20,12 @@ module.exports = {
         for (let i = 0; i < jsonsFiles.length; i++){
             const template = fsUtil.getJsonSync(`${path}/${jsonsFiles[i]}`);
             if (!template.hasOwnProperty('storeTime')) continue;
-
+            
             const fileNeedToBeRemoved = timeUtils.isDurationExceed(template.storeTime);
+            console.log(path);
             if(fileNeedToBeRemoved){
                 const params = {
-                    fileName:template.fileName,
+                    fileName: jsonsFiles[i],
                     path
                 }
                 fsUtil.removeFile(params);
