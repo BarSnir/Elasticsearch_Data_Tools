@@ -1,0 +1,1 @@
+![GitHub Logo](/assets/diagram.png)
