@@ -1,2 +1,5 @@
 ## Elasticsearch Benchmarking module:
-<img src="./assets/diagram.png" width="100%" height="900" />
+
+<p align="center">
+ <img src="./assets/diagram.png" width="700" height="700" />
+</p>
