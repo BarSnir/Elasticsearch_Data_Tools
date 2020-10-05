@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
 const validator = require('../../validator');
 
-
 describe('isSearchReq', () => {
     it('should return false', () => {
         //assign
@@ -106,19 +105,28 @@ describe('gotProperQueryStructure', () => {
 });
 
 describe("isTypeQueryThresholdExceed", ()=>{
+    process.env.SEARCH_TYPE_SIZE = 5;
+    process.chdir(`${__dirname}/../../`);
+    it('should return true', ()=>{
+        //assign
+        const params = getPayloadMock('test');
+        //action
+        const results = validator.isTypeQueryThresholdExceed(params);
+        //results
+        expect(results).to.be.true;
+    });
     it('should return false', ()=>{
-                //assign
-                const params = getPayloadMock();
-                //action
-                const results = validator.isTypeQueryThresholdExceed(params);
-                //results
-                expect(results).to.be.true;
+        //assign
+        const params = getPayloadMock('platinum');
+        //action
+        const results = validator.isTypeQueryThresholdExceed(params);
+        //results
+        expect(results).to.be.false;
     });
 });
 
-
-
-function getPayloadMock(){
+function getPayloadMock(name=false){
+    const queryName = name || "test"
     return {
         "payload":{
             "query":{
@@ -126,18 +134,18 @@ function getPayloadMock(){
                 "size":3,
                 "query":{
                     "function_score":{
-                        "_name":"test_a",
+                        "_name":queryName,
                     }
                 }
             },
             "index":"vehicles_feed_v1",
             "cluster":"Y2-EC-DEV",
             "type":"es_profiler_agent",
-            "name":"query_vehicles_feed_v1_test_xiKPTqWxzc",
+            "name":`query_vehicles_feed_v1_${queryName}_xiKPTqWxzc`,
             "token":"xiKPTqWxzc",
             "project":"ES_PROFILER",
             "storeTime":"10-4-2020",
         },
-        "fileName":"query_vehicles_feed_v1_test_xiKPTqWxzc"
+        "fileName":`query_vehicles_feed_v1_${queryName}_xiKPTqWxzc`
     }
 }

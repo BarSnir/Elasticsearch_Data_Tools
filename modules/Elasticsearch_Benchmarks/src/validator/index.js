@@ -10,10 +10,9 @@ module.exports = {
         return false;
     },
     isTypeQueryThresholdExceed(params){
-        const jsonFiles = fsUtils.getJsonFiles(`${process.cwd()}/templates/Queries`);
+        const jsonFiles = this.getJsonFiles();
         const newFileName = params.fileName;
         const token = params.payload.token;
-        console.log(params);
         const str = newFileName.replace(token, "");
         const threshold = process.env.SEARCH_TYPE_SIZE;
         let counter = 0;
@@ -21,7 +20,6 @@ module.exports = {
         jsonFiles.forEach((item)=>{
             if(item.includes(str)) counter++
         });
-
         return counter >= threshold;
     },
     gotProperQueryStructure(body){
@@ -29,5 +27,8 @@ module.exports = {
         const notEmptyQuery = (body.query && Object.keys(body.query).length) ? true : false;
         const notEmptyAgg = (body.aggs && Object.keys(body.aggs).length) ? true : false;
         return properQueryStructure && (notEmptyQuery || notEmptyAgg);
+    },
+    getJsonFiles(){
+        return fsUtils.getJsonFiles(`${process.cwd()}/templates/Queries`);
     }
 }
