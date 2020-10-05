@@ -22,11 +22,13 @@ module.exports = {
         return this;
     },
     addProfile(template) {
+        if(!template.query) return this;
         template.query.profile = true;
         return this;
     },
     addQueryNamed(template){
         const rootObject = objectGet(template, 'query.query', null);
+        
         if(!rootObject){
             return this;
         }
@@ -46,6 +48,7 @@ module.exports = {
         return this;
     },
     getCluster(template){
+        if(!process.env.ES_CLUSTER_NAME) return this;
         template.cluster = process.env.ES_CLUSTER_NAME;
         return this;
     },
@@ -59,7 +62,7 @@ module.exports = {
         return this;
     },
     getProject(template){
-        template.project = "ES_PROFILER";
+        template.project = process.env.project || "ES_PROFILER";
         return this;
     },
     getQueryName(object){
