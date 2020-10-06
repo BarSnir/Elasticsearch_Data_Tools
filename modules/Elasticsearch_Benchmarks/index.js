@@ -7,12 +7,12 @@ server.configCWD()
     .configRepo();
 
 async function runModule() {
-    services.removeDeprecatedQueries()
+    services.removeOldQueries()
     const queries = services.getProfilerQueries();
     const hits = await services.executeQueries(queries);
     const results = services.getResults(queries, hits);
-    //services.transmitResults(results);
+    services.transmitResults(results);
 }
 
 runModule();
-// setInterval(runModule, process.env.SAMPLE_PERIOD);
+setInterval(runModule, process.env.SAMPLE_PERIOD);

@@ -12,7 +12,7 @@ module.exports = {
         a: 'Step2: Collecting json query files.\n',
         b: 'Step3: Collected json query files, Executing queries against Elasticsearch.\n',
         c: 'Step4: Got profiled queries results, now transforming them.\n',
-        d: 'Step5: Results been transformed, uploading to Logzio.\n'
+        d: 'Step5: Results been transformed, Bulking to concrete client.\n'
     },
     collectRequestQuery(req, res){
         const payload = transformers.transformsQueryToJson(req);
@@ -31,7 +31,7 @@ module.exports = {
         fs.writeJsonToPath(params);
         res.send('query saved');
     },
-    removeDeprecatedQueries(){
+    removeOldQueries(){
         const path = this.getJsonsDirPath();
         const jsonsFiles = fsUtil.getJsonFiles(path);
         for (let i = 0; i < jsonsFiles.length; i++){
@@ -68,7 +68,7 @@ module.exports = {
     transmitResults(results){
         logger.log(this.logMessage.d);
         results.forEach((object)=>{
-            logzioClient.sendLog(object);
+            // logzioClient.sendLog(object);
         });
     },
     getJsonsDirPath(){

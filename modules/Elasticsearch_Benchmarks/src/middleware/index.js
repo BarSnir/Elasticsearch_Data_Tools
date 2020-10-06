@@ -1,4 +1,4 @@
-const validator = require()
+const validator = require("../validator")
 
 module.exports = {
     properRequest(req, res, next){
