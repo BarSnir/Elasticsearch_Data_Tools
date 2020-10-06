@@ -67,9 +67,30 @@ module.exports = {
     },
     transmitResults(results){
         logger.log(this.logMessage.d);
-        results.forEach((object)=>{
-            // logzioClient.sendLog(object);
+        const bulksTargetArr = process.env.CLIENT_TYPE.split(",");
+        bulksTargetArr.forEach((item)=>{
+            this[`${item}Bulk`](results)
         });
+    },
+    logzioBulk(results){
+        results.forEach((object)=>{
+            //logzioClient.sendLog(object);
+        });
+    },
+    elasticsearchBulk(results){
+        const bulk = [];
+        let indexName = process.env.PROFILER_INDEX_NAME;
+        indexName += `-${timeUtils.getCurrentDate()}`;
+        results.forEach((result)=>{
+            bulk.push({
+                index: { 
+                    _index: indexName,
+                    _type: process.env.PROFILER_TYPE_NAME 
+                }
+            });
+            bulk.push(result);
+        });
+        
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;

@@ -11,8 +11,9 @@ module.exports = {
     env_path: '../.env',
     logMessages:{
         a: `Module's server is listen on port`,
-        b:`Connection establish by Elastic cloud.\n`,
-        c: `Logzio connector established\n`
+        b: `Connection establish by Elastic cloud.\n`,
+        c: `Logzio connector established\n`,
+        d: `Connection establish by Elasticsearch On-prem.\n`
     },
     configCWD(){
         process.chdir(__dirname);
@@ -31,8 +32,26 @@ module.exports = {
         return this;
     },
     configRepo(){
-        elasticRepo.initializeECConnection();
-        logger.log(this.logMessages.b);
+        switch(process.env.SOURCE_ELASTICSEARCH) {
+            case "cloud": {
+                try {
+                    elasticRepo.initializeECConnection();
+                    logger.log(this.logMessages.b);
+                } catch (err) {
+                    throw new error("Something went wrong with Elastic cloud connection.")
+                }
+                break;
+            }
+            case "on-prem": {
+                try {
+                    elasticRepo.initializeESConnection();
+                    logger.log(this.logMessages.d);
+                } catch (err) {
+                    throw new error("Something went wrong with Elasticsearch on-prem connection.")
+                }
+                break;
+            }
+        }
         logzioClient.initLogzioLogger();
         logger.log(this.logMessages.c);
     }

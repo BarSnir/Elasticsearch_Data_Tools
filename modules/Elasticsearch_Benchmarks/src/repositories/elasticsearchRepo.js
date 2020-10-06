@@ -14,10 +14,25 @@ module.exports = {
         });
         logger.log(this.logMessages.a)
     },
+    initializeESConnection() {
+        this.elasticClient = elasticConnector.getEsClient(
+            process.env.ELASTICSEARCH_ON_PREM_SOURCE
+        )
+        logger.log(this.logMessages.a)
+    },
     executeQuery(query, index) {
         return this.elasticClient.search({
             index: index,
             body: query
+        });
+    },
+    initializeTargetCluster(){
+        
+    },
+    executeBulk(body){
+        return this.elasticClientTarget.bulk({
+            body,
+            refresh: true
         });
     }
 }
