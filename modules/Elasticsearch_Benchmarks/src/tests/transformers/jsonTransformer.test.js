@@ -130,7 +130,7 @@ describe('addQueryNamed', ()=>{
         expect(template.name).to.not.be.empty;
         expect(template.name).to.include('my_index');
     });
-    it('should  not set name becuase missing data',()=>{
+    it('should  not set name as cause of missing data',()=>{
         //assign
         const template = {};
         const request = getRequestMock();

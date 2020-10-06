@@ -7,7 +7,7 @@ router.use(bodyParser.json())
 
 router.get(
     '/:id/:id2?/:id3?/:id4?',
-     services.transformRequestQuery.bind(services)
+     services.collectRequestQuery.bind(services)
 );
 
 module.exports = router;

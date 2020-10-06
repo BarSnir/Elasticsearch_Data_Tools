@@ -1,13 +1,32 @@
 const fsUtils = require('../../library/utils/fs');
 
 module.exports = {
-    isSearchReq(params, body){
+    isSearchReq(params){
         for (let key in params) {
-            if (params[key] && params[key].includes('search') && this.gotProperQueryStructure(body)) {
+            if (params[key] && params[key].includes('search')) {
                 return true
             }
         }
         return false;
+    },
+    isProperStructure(body){
+        return this.isProperQueryName(body) || this.isProperAggName(body);
+    },
+    isProperQueryName(body, r=false){
+        if( (!r && !body.query) || !(typeof body == 'object')) return false;
+        let answer = false;
+
+        const keys = Object.keys(body);
+        for(let i=0; i < keys.length; i++){
+            if (keys[i] == "_name" || this.isProperQueryName(body[keys[i]], true) ) {
+                answer = true;
+                break;
+            };
+        }
+        return answer;
+    },
+    isProperAggName(body){
+        return body.aggs && Objet.keys(body.aggs).length;
     },
     isTypeQueryThresholdExceed(params){
         const jsonFiles = this.getJsonFiles();
@@ -21,12 +40,6 @@ module.exports = {
             if(item.includes(str)) counter++
         });
         return counter >= threshold;
-    },
-    gotProperQueryStructure(body){
-        const properQueryStructure = (body.hasOwnProperty("query") || body.hasOwnProperty("aggs"));
-        const notEmptyQuery = (body.query && Object.keys(body.query).length) ? true : false;
-        const notEmptyAgg = (body.aggs && Object.keys(body.aggs).length) ? true : false;
-        return properQueryStructure && (notEmptyQuery || notEmptyAgg);
     },
     getJsonFiles(){
         return fsUtils.getJsonFiles(`${process.cwd()}/templates/Queries`);

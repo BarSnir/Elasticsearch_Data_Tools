@@ -14,6 +14,25 @@ module.exports = {
         c: 'Step4: Got profiled queries results, now transforming them.\n',
         d: 'Step5: Results been transformed, uploading to Logzio.\n'
     },
+    errMessage:{
+        e02: `This type of query appears ${process.env.SEARCH_TYPE_SIZE} times. Query didn't saved to filesystem. \n`
+    },
+    collectRequestQuery(req, res){
+        const payload = transformers.transformsQueryToJson(req);
+        const path = this.getJsonsDirPath();
+        const fileName = payload.name;
+        const params = {
+            payload,
+            path,
+            fileName
+        }
+        if (validator.isTypeQueryThresholdExceed(params)){
+            res.send(this.errMessage.e02).status(400);
+            return;
+        }
+        fs.writeJsonToPath(params);
+        res.send('query saved');
+    },
     removeDeprecatedQueries(){
         const path = this.getJsonsDirPath();
         const jsonsFiles = fsUtil.getJsonFiles(path);
@@ -48,26 +67,6 @@ module.exports = {
         logger.log(this.logMessage.c);
         return transformers.transformResults(queries, hits);
     },
-    transformRequestQuery(req, res){
-        if(!validator.isSearchReq(req.params, req.body)){
-            res.send(this.getMessage('e01'));
-            return;
-        } 
-        const payload = transformers.transformsQueryToJson(req);
-        const path = this.getJsonsDirPath();
-        const fileName = payload.name;
-        const params = {
-            payload,
-            path,
-            fileName
-        }
-        if (validator.isTypeQueryThresholdExceed(params)){
-            res.send(this.getMessage('e02'))
-            return;
-        }
-        fs.writeJsonToPath(params);
-        res.send(this.getMessage('success'));
-    },
     transmitResults(results){
         logger.log(this.logMessage.d);
         results.forEach((object)=>{
@@ -76,13 +75,5 @@ module.exports = {
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;
-    },
-    getMessage(messageKey){
-        const messages = {
-            success: "Query saved\n",
-            e01: 'This is not search request\n',
-            e02: `This type of query appears ${process.env.SEARCH_TYPE_SIZE} times. Query didn't saved to filesystem. \n`,
-        }
-        return messages[messageKey];
     }
 }
