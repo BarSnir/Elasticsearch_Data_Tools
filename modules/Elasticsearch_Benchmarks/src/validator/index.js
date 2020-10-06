@@ -26,7 +26,7 @@ module.exports = {
         return answer;
     },
     isProperAggName(body){
-        return body.aggs && Objet.keys(body.aggs).length;
+        return !!body.aggs && !!Object.keys(body.aggs).length;
     },
     isTypeQueryThresholdExceed(params){
         const jsonFiles = this.getJsonFiles();

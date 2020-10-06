@@ -14,9 +14,6 @@ module.exports = {
         c: 'Step4: Got profiled queries results, now transforming them.\n',
         d: 'Step5: Results been transformed, uploading to Logzio.\n'
     },
-    errMessage:{
-        e02: `This type of query appears ${process.env.SEARCH_TYPE_SIZE} times. Query didn't saved to filesystem. \n`
-    },
     collectRequestQuery(req, res){
         const payload = transformers.transformsQueryToJson(req);
         const path = this.getJsonsDirPath();
@@ -27,7 +24,8 @@ module.exports = {
             fileName
         }
         if (validator.isTypeQueryThresholdExceed(params)){
-            res.send(this.errMessage.e02).status(400);
+            const str = `This type of query appears ${process.env.SEARCH_TYPE_SIZE} times. Query didn't saved to filesystem.`;
+            res.send(str).status(400);
             return;
         }
         fs.writeJsonToPath(params);

@@ -6,15 +6,12 @@ describe('isSearchReq', () => {
         //assign
         const params = {
             id: 'vehicles_feed_v1',
-            id2: '_search',
+            id2: '_bulk',
             id3: undefined,
             id4: undefined
-        },
-        body = {
-            "test":"purpose"
         }
         //action
-        const results = validator.isSearchReq(params, body);
+        const results = validator.isSearchReq(params);
         //results
         expect(results).to.be.false;
     });
@@ -25,80 +22,9 @@ describe('isSearchReq', () => {
             id2: '_search',
             id3: undefined,
             id4: undefined
-        },
-        body = {
-            "query":{
-                "term":{
-                    "field": "value"
-                }
-            }
         }
         //action
-        const results = validator.isSearchReq(params, body);
-        //results
-        expect(results).to.be.true;
-    });
-});
-
-
-describe('gotProperQueryStructure', () => {
-    it('should return false', () => {
-        //assign
-        body = {
-            "test":"purpose"
-        }
-        //action
-        const results = validator.gotProperQueryStructure(body);
-        //results
-        expect(results).to.be.false;
-    });
-    it('should return false', () => {
-        //assign
-        body = {
-            "query":{}
-        }
-        //action
-        const results = validator.gotProperQueryStructure(body);
-        //results
-        expect(results).to.be.false;
-    });
-    it('should return true', () => {
-        //assign
-        body = {
-            "query":{
-                "term":{
-                    "field": "value"
-                }
-            }
-        }
-        //action
-        const results = validator.gotProperQueryStructure(body);
-        //results
-        expect(results).to.be.true;
-    });
-    it('should return false', () => {
-        //assign
-        body = {
-            "aggs":{}
-        }
-        //action
-        const results = validator.gotProperQueryStructure(body);
-        //results
-        expect(results).to.be.false;
-    });
-    it('should return true', () => {
-        //assign
-        body = {
-            "aggs":{
-                "some_agg":{
-                    "terms":{
-                        "field": "some_field"
-                    }
-                }
-            }
-        }
-        //action
-        const results = validator.gotProperQueryStructure(body);
+        const results = validator.isSearchReq(params);
         //results
         expect(results).to.be.true;
     });
@@ -120,6 +46,56 @@ describe("isTypeQueryThresholdExceed", ()=>{
         const params = getPayloadMock('platinum');
         //action
         const results = validator.isTypeQueryThresholdExceed(params);
+        //results
+        expect(results).to.be.false;
+    });
+});
+
+describe("isProperQueryName", ()=>{
+    it('should return true', ()=>{
+        //assign
+        const params = getPayloadMock('test').payload.query;
+        //action
+        const results = validator.isProperQueryName(params);
+        //results
+        expect(results).to.be.true;
+    });
+    it('should return false', ()=>{
+        //assign
+        const params = getPayloadMock('test').payload.query;
+        params.query.function_score = {};
+        //action
+        const results = validator.isProperQueryName(params);
+        //results
+        expect(results).to.be.false;
+    });
+});
+
+describe("isProperAggName", ()=>{
+    it('should return true', ()=>{
+        //assign
+        const params = getPayloadMock('test').payload.query;
+        params.aggs ={
+            my_agg:{
+                terms:{
+                    field:"keyword_field",
+                    size:10,
+                    order:{
+                        _count: "desc"
+                    }
+                }
+            }
+        }
+        //action
+        const results = validator.isProperAggName(params);
+        //results
+        expect(results).to.be.true;
+    });
+    it('should return false', ()=>{
+        //assign
+        const params = getPayloadMock('test').payload.query;
+        //action
+        const results = validator.isProperAggName(params);
         //results
         expect(results).to.be.false;
     });
