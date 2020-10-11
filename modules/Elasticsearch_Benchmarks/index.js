@@ -4,7 +4,8 @@ const services = require('./src/services')
 server.configCWD()
     .configEnv()
     .configServer()
-    .configRepo();
+    .configRepo(process.env.SOURCE_ELASTICSEARCH_TYPE)
+    .configRepo(process.env.TARGET_ELASTICSEARCH_TYPE);
 
 async function runModule() {
     services.removeOldQueries()
@@ -15,4 +16,4 @@ async function runModule() {
 }
 
 runModule();
-setInterval(runModule, process.env.SAMPLE_PERIOD);
+setInterval(runModule, parseInt(process.env.SAMPLE_PERIOD));

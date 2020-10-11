@@ -20,5 +20,8 @@ module.exports = {
         let Difference_In_Time = date2.getTime() - date1.getTime(); 
         Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
         return Difference_In_Days >= process.env.KEEP_QUERY_DURATION_DAYS;
+    },
+    getTimestamp(){
+        return new Date(Date.now()).toISOString();
     }
 }

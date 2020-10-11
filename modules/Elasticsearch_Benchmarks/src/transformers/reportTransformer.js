@@ -1,4 +1,5 @@
-const logger = require('../../library/utils/logger')
+const logger = require('../../library/utils/logger');
+const timeUtils = require('../../library/utils/time')
 const objectGet = require('object-path-get');
 
 module.exports = {
@@ -125,6 +126,7 @@ module.exports = {
             root_query: options.root,
             took: options.took,
             cluster: options.query.cluster,
+            profiler_timestamp: timeUtils.getTimestamp(),
             query_section: "query",
             query_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
             query_type: options.mainQueryStats.type,
@@ -144,6 +146,7 @@ module.exports = {
             root_aggregation: options.root,
             took: options.took,
             cluster: options.query.cluster,
+            profiler_timestamp: timeUtils.getTimestamp(),
             query_section: "aggregation",
             aggregation_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
             aggregation_type: options.mainQueryStats.type,
@@ -168,6 +171,7 @@ module.exports = {
             root_collector: options.root,
             took: options.took,
             cluster: options.query.cluster,
+            profiler_timestamp: timeUtils.getTimestamp(),
             query_section: "collector",
             collector_time: this.nanoToMillie(options.mainQueryStats.time_in_nanos),
             collector_type: options.mainQueryStats.reason,

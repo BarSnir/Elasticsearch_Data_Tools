@@ -31,28 +31,48 @@ module.exports = {
         });
         return this;
     },
-    configRepo(){
-        switch(process.env.SOURCE_ELASTICSEARCH) {
-            case "cloud": {
+    configRepo(elasticsearchClusterType){
+        if(!elasticsearchClusterType) return ;
+        switch(elasticsearchClusterType) {
+            case "source-cloud": {
                 try {
-                    elasticRepo.initializeECConnection();
-                    logger.log(this.logMessages.b);
+                    elasticRepo.initECConnectionSource();
+                    logger.log(`From source Elasticsearch ${this.logMessages.b}`);
                 } catch (err) {
-                    throw new error("Something went wrong with Elastic cloud connection.")
+                    throw new Error("From source Elasticsearch, Something went wrong with Elastic cloud connection.")
                 }
                 break;
             }
-            case "on-prem": {
+            case "source-on-prem": {
                 try {
-                    elasticRepo.initializeESConnection();
-                    logger.log(this.logMessages.d);
+                    elasticRepo.initESConnectionSource();
+                    logger.log(`From source Elasticsearch ${this.logMessages.d}`);
                 } catch (err) {
-                    throw new error("Something went wrong with Elasticsearch on-prem connection.")
+                    throw new Error(`From source Elasticsearch, Something went wrong with Elasticsearch on-prem connection.\n ${err}`)
+                }
+                break;
+            }
+            case "target-cloud": {
+                try {
+                    elasticRepo.initECConnectionTarget();
+                    logger.log(`From target Elasticsearch ${this.logMessages.b}`);
+                } catch (err) {
+                    throw new Error("From target Elasticsearch, Something went wrong with Elastic cloud connection.")
+                }
+                break;
+            }
+            case "target-on-prem": {
+                try {
+                    elasticRepo.initESConnectionTarget();
+                    logger.log(`From target Elasticsearch ${this.logMessages.d}`);
+                } catch (err) {
+                    throw new Error(`From target Elasticsearch, Something went wrong with Elasticsearch on-prem connection.\n ${err}`)
                 }
                 break;
             }
         }
         logzioClient.initLogzioLogger();
         logger.log(this.logMessages.c);
+        return this;
     }
 }

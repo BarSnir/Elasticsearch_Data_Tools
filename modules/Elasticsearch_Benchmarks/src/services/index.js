@@ -77,10 +77,10 @@ module.exports = {
             //logzioClient.sendLog(object);
         });
     },
-    elasticsearchBulk(results){
+    async elasticsearchBulk(results){
         const bulk = [];
         let indexName = process.env.PROFILER_INDEX_NAME;
-        indexName += `-${timeUtils.getCurrentDate()}`;
+        indexName += `-${timeUtils.getCurrentDate(true)}`;
         results.forEach((result)=>{
             bulk.push({
                 index: { 
@@ -90,7 +90,8 @@ module.exports = {
             });
             bulk.push(result);
         });
-        
+        const resp = await elasticRepo.executeBulkToTarget(bulk);  
+        if(resp.statusCode == 200) logger.log("Bulk into Elasticsearch succeeded.")
     },
     getJsonsDirPath(){
         return `${process.cwd()}/templates/Queries`;
