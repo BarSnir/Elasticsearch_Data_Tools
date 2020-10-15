@@ -101,6 +101,26 @@ describe("isProperAggName", ()=>{
     });
 });
 
+
+describe("isProperStructure", ()=>{
+    it('should return true', ()=>{
+        //assign
+        const request = getRequestMock();
+        //action
+        const results = validator.isProperStructure(request.body);
+        //results
+        expect(results).to.be.true;
+    });
+    it('should return true', ()=>{
+        //assign
+        const request = getRequestMockWithAgg();
+        //action
+        const results = validator.isProperStructure(request.body);
+        //results
+        expect(results).to.be.true;
+    });
+});
+
 function getPayloadMock(name=false){
     const queryName = name || "test"
     return {
@@ -124,4 +144,36 @@ function getPayloadMock(name=false){
         },
         "fileName":`query_vehicles_feed_v1_${queryName}_xiKPTqWxzc`
     }
+}
+
+function getRequestMock(){
+    return {
+        path:'/my_index/_search',
+        body:{
+            "size": 3,
+            "query": {
+                "function_score": {
+                "_name": "test",
+                "query": {},
+                "random_score": {}
+                }
+            }
+        }
+    }
+}
+
+function getRequestMockWithAgg(){
+    return {
+        path:'/my_index/_search',
+        body:{
+            "size": 0,
+            "aggs":{
+                "my_agg":{
+                    "terms":{
+                        "field": "feed_section"
+                    }
+                }
+            }
+        }
+    }  
 }
