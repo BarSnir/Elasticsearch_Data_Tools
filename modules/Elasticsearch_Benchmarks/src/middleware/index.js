@@ -2,16 +2,46 @@ const validator = require("../validator")
 
 module.exports = {
     properRequest(req, res, next){
-        if(!validator.isSearchReq(req.params)){
-            res.send(this.getMessage('e01')).status(400);
-            return;
-        }
-        if(!validator.isProperStructure(req.body)){
-            res.send(this.getMessage('e03')).status(400);
-            return; 
+        const searchType = this.getSearchType(req.params);
+        switch(searchType){
+            case "_search":{
+                if(!validator.isProperStructure(JSON.parse(req.body))){
+                    res.status(400).send(this.getMessage('e03'));
+                    return; 
+                }
+                break;
+            }
+            case "_msearch":{
+                const msearchArr = JSON.parse(
+                    JSON.stringify(
+                        req.body
+                        .split("\n")
+                        .filter(item => item.length)
+                        .map(item => JSON.parse(item))
+                        .filter(item => !item.index)
+                    )
+                );
+                for (let i = 0; i < msearchArr.length; i++){
+                    if(!validator.isProperStructure(msearchArr[i])){
+                        res.status(400).send(this.getMessage('e03'));
+                        break;
+                    }
+                }
+                break;
+            }
         }
         next();
     },
+    getSearchType(params){
+        const searchTypesArr = [
+            '_search',
+            '_msearch'
+        ];
+        const paramsValues = Object.values(params);
+        for (let i = 0; i < searchTypesArr.length; i ++){
+            if(paramsValues.indexOf(searchTypesArr[i]) > -1) return searchTypesArr[i];
+        }
+    },  
     getMessage(errKey){
         const messages = {
             success: "Query saved\n",

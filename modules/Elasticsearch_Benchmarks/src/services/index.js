@@ -15,6 +15,9 @@ module.exports = {
         d: 'Step5: Results been transformed, Bulking to concrete client.\n'
     },
     collectRequestQuery(req, res){
+        console.log(req.body);
+        res.send("some")
+        return;
         const payload = transformers.transformsQueryToJson(req);
         const path = this.getJsonsDirPath();
         const fileName = payload.name;

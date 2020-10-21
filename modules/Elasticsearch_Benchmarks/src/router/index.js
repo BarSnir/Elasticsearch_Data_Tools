@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const services = require('../services');
 const middlewares = require('../middleware');
 
-router.use(bodyParser.json())
+router.use(bodyParser.text({type: '*/*'}))
 
 router.get('/:id/:id2?/:id3?/:id4?',
     [middlewares.properRequest.bind(middlewares)],

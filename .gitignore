@@ -35,6 +35,7 @@ mock.json
 skeletons/
 version.sh
 curl*.sh
+multisearch.sh
 DockerFile
 .dockerignore
 modules/Elasticsearch_Benchmarks/library

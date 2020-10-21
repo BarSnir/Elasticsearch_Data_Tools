@@ -3,7 +3,7 @@ const fsUtils = require('../../library/utils/fs');
 module.exports = {
     isSearchReq(params){
         for (let key in params) {
-            if (params[key] && params[key].includes('search')) {
+            if (params[key] && params[key].includes('search') || params[key].includes('msearch')) {
                 return true
             }
         }

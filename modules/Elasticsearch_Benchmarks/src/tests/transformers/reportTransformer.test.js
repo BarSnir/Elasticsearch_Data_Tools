@@ -11,5 +11,11 @@ describe('transformers properties check', ()=>{
         //assert
         expect(logsMessage).to.be.a('string');
     });
+    it('log.a is a string',()=>{
+        //assign
+        const logsMessage = reportTransformer.logMessages.a;
+        //assert
+        expect(logsMessage).to.be.a('string');
+    });
 })
 
