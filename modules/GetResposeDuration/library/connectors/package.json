@@ -1,0 +1,15 @@
+{
+  "name": "connectors",
+  "version": "1.0.0",
+  "description": "Connectors to data sources in Elasticsearch-Data-Tools repo",
+  "main": "index.js",
+  "repository": "",
+  "author": "Bar Snir",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.8.0",
+    "google-spreadsheet": "^3.0.11",
+    "logzio-nodejs": "^2.0.2"
+  }
+}
